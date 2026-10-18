@@ -1,0 +1,67 @@
+# Module: Core
+
+> From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 7. When the design changes, this page changes with it.
+
+The foundation every module stands on.
+
+Its tools are its only public face. It never writes another module's tables;
+it emits events and reads other modules through their services.
+
+Every area folder holds the same parts. File names and extensions follow the
+stack once it is chosen:
+
+| Part | Holds |
+|------|-------|
+| `tools` | One handler per tool page; checks inputs, calls the service, returns the output |
+| `service` | The area's rules; the only code that changes its data |
+| `data` | Access to the area's own tables, in the module's own schema |
+| `listeners` | Handlers for events from other modules |
+| `tests` | The area's own tests: every tool, every rule |
+
+## Data (schema `core`)
+
+```
+business          id, name, slug, business_type, currency, timezone, locale,
+                  template_key, settings(jsonb), created_at
+user              id, email, phone, name, password_hash, locale
+session           id, user_id, created_at, expires_at, last_seen_at
+membership        id, business_id, user_id, role, invited_by, joined_at
+                  UNIQUE (business_id, user_id)
+invite            id, business_id, phone_or_email, role, token_hash, expires_at
+role              business_id, name, permissions(jsonb)
+                  defaults: owner, manager, staff, viewer
+location          id, business_id, name, address, area      (branches)
+template          key, version, content(jsonb)              (files, versioned)
+pack              key, version, module, needs, content(jsonb) (files, versioned)
+business_pack     business_id, pack_key, status(on|off), settings(jsonb),
+                  changed_by, changed_at
+audit_log         id, business_id, actor_type(user|ai|system), actor_id,
+                  action, object_type, object_id, before, after, created_at
+outbox            id, business_id, event_type, payload, created_at,
+                  dispatched_at, attempts, last_error
+notification      id, business_id, user_id, type, title, body,
+                  ref_type, ref_id, read_at, created_at
+api_key           id, business_id, name, scopes, created_at   (term 2)
+```
+
+## Events
+
+- **Emits:** BusinessCreated, MemberInvited, MemberJoined, PackTurnedOff, PackTurnedOn, RoleChanged
+- **Listens to:** none
+
+## Tools (12)
+
+| Tool | Does | R/W | Pack | Term |
+|------|------|:---:|------|:----:|
+| [`core.get_business`](../../contracts/tools/core/get_business.md) | Profile, hours, location, delivery areas | R | `essentials` | 1 |
+| [`core.update_business`](../../contracts/tools/core/update_business.md) | Hours, settings, profile | W | `essentials` | 1 |
+| [`core.list_packs`](../../contracts/tools/core/list_packs.md) | Packs on, packs in the library, what each needs | R | `essentials` | 1 |
+| [`core.turn_on_pack`](../../contracts/tools/core/turn_on_pack.md) | Turn a pack on, with the packs it needs (undo: turn off) | W | `essentials` | 1 |
+| [`core.turn_off_pack`](../../contracts/tools/core/turn_off_pack.md) | Turn a pack off; its data is kept (undo: turn on) | W | `essentials` | 1 |
+| [`core.list_members`](../../contracts/tools/core/list_members.md) | Members and roles | R | `essentials` | 1 |
+| [`core.invite_member`](../../contracts/tools/core/invite_member.md) | Invite by phone or email with a role | W | `essentials` | 1 |
+| [`core.change_role`](../../contracts/tools/core/change_role.md) | Change a member's role | W | `essentials` | 1 |
+| [`core.remove_member`](../../contracts/tools/core/remove_member.md) | Remove a member | W | `essentials` | 1 |
+| [`core.list_locations`](../../contracts/tools/core/list_locations.md) | Branches | R | `essentials` | 1 |
+| [`core.get_audit_log`](../../contracts/tools/core/get_audit_log.md) | Who changed what | R | `essentials` | 1 |
+| [`core.notify`](../../contracts/tools/core/notify.md) | Notification to a member | W | `essentials` | 1 |
