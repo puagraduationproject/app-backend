@@ -1,4 +1,4 @@
-# The test setup: router, staff app, backend and database.
+# The test setup: router, staff app, backend, migrations and database.
 # Images are built from app-web and app-backend and tagged with RELEASE.
 # Real settings come from .env next to this file, never from the repo.
 name: graduationproject
@@ -23,6 +23,23 @@ services:
     environment:
       PORT: "11001"
       DATABASE_URL: postgres://app:${POSTGRES_PASSWORD:?set in .env}@database:5432/app
+      PUBLIC_URL: ${PUBLIC_URL:?set in .env}
+      AUTH_SECRET: ${AUTH_SECRET:?set in .env}
+      GMAIL_USER: ${GMAIL_USER:?set in .env}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:?set in .env}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    image: ghcr.io/amacneil/dbmate:2
+    command: ["--wait", "--no-dump-schema", "--migrations-dir", "/db/migrations/core", "up"]
+    environment:
+      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD:?set in .env}@database:5432/app?sslmode=disable
+    volumes:
+      - ./migrations:/db/migrations:ro
     depends_on:
       database:
         condition: service_healthy

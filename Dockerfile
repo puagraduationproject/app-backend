@@ -6,6 +6,7 @@ COPY tsconfig.json ./
 COPY api ./api
 COPY config ./config
 COPY database ./database
+COPY platform ./platform
 RUN npm run build
 
 FROM node:22-alpine

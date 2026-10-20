@@ -9,8 +9,12 @@ row-level security.
 ```
 business          id, name, slug, business_type, currency, timezone, locale,
                   template_key, settings(jsonb), created_at
-user              id, email, phone, name, password_hash, locale
-session           id, user_id, created_at, expires_at, last_seen_at
+account           id, email (one account per email), email_verified_at, name,
+                  phone, password_hash (empty for Google-only), google_id,
+                  language, failed_logins, locked_until, created_at, updated_at
+email_code        id, email, code_hash, attempts, expires_at, used_at
+auth_ticket       id, account_id, ticket_hash, expires_at, used_at
+session           id, user_id, created_at, expires_at, last_seen_at  (later step)
 membership        id, business_id, user_id, role, invited_by, joined_at
                   UNIQUE (business_id, user_id)
 invite            id, business_id, phone_or_email, role, token_hash, expires_at

@@ -12,6 +12,14 @@ into words in the user's language.
 | `conflict` | The state changed (for example, the order is already preparing) |
 | `limit_reached` | A limit was hit (credit limit, discount limit, rate limit) |
 | `pack_off` | The pack this needs is off for this business |
-| `outside_failed` | An outside service (channel, payment, courier) failed |
+| `outside_failed` | An outside service (channel, payment, courier, email, Google) failed |
+| `wrong_code` | An email code does not match (auth) |
+| `code_expired` | An email code is too old or was used (auth) |
+| `too_many_tries` | Too many wrong codes; a new one is needed (auth) |
+| `too_soon` | A new code was asked for too soon (auth) |
+| `wrong_password` | Email and password do not match (auth) |
+| `locked` | Too many wrong passwords; wait (auth) |
+| `no_password` | The account has no password yet (auth) |
+| `ticket_invalid` | A sign-up ticket is wrong, used or expired (auth) |
 
 More codes are added here before any tool uses them.
