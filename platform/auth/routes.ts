@@ -131,7 +131,7 @@ async function checkAccountPassword(address: string, given: string): Promise<Acc
 }
 
 function googleFailed(reply: FastifyReply, reason: string) {
-  return reply.redirect(`/?google=${encodeURIComponent(reason)}`);
+  return reply.redirect(`/login?google=${encodeURIComponent(reason)}`);
 }
 
 export async function authRoutes(app: FastifyInstance) {
