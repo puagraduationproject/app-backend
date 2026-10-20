@@ -63,4 +63,6 @@ account is logged in when it sets its password.
 | `not_found` | No such device for this account |
 | `bad_origin` | The request came from another site (403) |
 
-Response shape: `{ "error": { "code": "wrong_code", "message": "for logs only", "field": "code" } }`.
+Response shape: `{ "error": { "code": "wrong_code", "field": "code" } }`. The reason in words goes only to the backend's log, never to the browser.
+
+`account` carries no internal ID; the browser never needs it.

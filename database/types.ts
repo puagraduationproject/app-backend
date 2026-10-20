@@ -55,7 +55,64 @@ export interface SessionTable {
   end_reason: SessionEndReason | null;
 }
 
+export type BusinessType = 'coffee_shop' | 'small_market' | 'other';
+export type Role = 'owner' | 'manager' | 'staff' | 'viewer';
+
+export interface BusinessTable {
+  id: string;
+  name: string;
+  handle: string;
+  business_type: BusinessType;
+  template_key: 'coffee_shop' | 'small_market' | null;
+  team_size: 'alone' | 'team';
+  currency: Generated<string>;
+  timezone: Generated<string>;
+  locale: Generated<string>;
+  settings: Generated<unknown>;
+  created_by: string;
+  created_at: Generated<Date>;
+}
+
+export interface MembershipTable {
+  id: Generated<string>;
+  business_id: string;
+  user_id: string;
+  username: string;
+  display_name: string;
+  role: Role;
+  invited_by: string | null;
+  joined_at: Generated<Date>;
+}
+
+export interface AuditLogTable {
+  id: Generated<string>;
+  business_id: string;
+  actor_type: 'user' | 'ai' | 'system';
+  actor_id: string | null;
+  action: string;
+  object_type: string;
+  object_id: string | null;
+  before: unknown;
+  after: unknown;
+  created_at: Generated<Date>;
+}
+
+export interface OutboxTable {
+  id: Generated<string>;
+  business_id: string;
+  event_type: string;
+  payload: unknown;
+  created_at: Generated<Date>;
+  dispatched_at: NullableTimestamp;
+  attempts: Generated<number>;
+  last_error: string | null;
+}
+
 export interface Database {
+  'core.business': BusinessTable;
+  'core.membership': MembershipTable;
+  'core.audit_log': AuditLogTable;
+  'core.outbox': OutboxTable;
   'core.account': AccountTable;
   'core.email_code': EmailCodeTable;
   'core.auth_ticket': AuthTicketTable;

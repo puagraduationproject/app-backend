@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { allowNewCode, client, db, lastCode, signUp, startApp } from './helpers.js';
+import { allowNewCode, client, db, lastCode, signUp, startApp, stopApp } from '../helpers.js';
 
 let app: FastifyInstance;
 
@@ -11,8 +11,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await app.close();
-  await db.destroy();
+  await stopApp(app);
 });
 
 describe('sign up with email', () => {

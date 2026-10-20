@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { CHROME_WINDOWS, FIREFOX_LINUX, client, db, sentInLogMode, signUp, startApp } from './helpers.js';
+import { CHROME_WINDOWS, FIREFOX_LINUX, client, db, sentInLogMode, signUp, startApp, stopApp } from '../helpers.js';
 
 let app: FastifyInstance;
 
@@ -9,8 +9,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await app.close();
-  await db.destroy();
+  await stopApp(app);
 });
 
 const logIn = async (email: string, password: string, userAgent?: string) => {

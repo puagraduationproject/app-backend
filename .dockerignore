@@ -4,8 +4,9 @@ dist
 contracts
 rules
 templates
-modules
 fake
 tests
 deploy
 **/*.md
+har
+*.har

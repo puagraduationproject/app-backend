@@ -6,6 +6,7 @@ import { db } from '../database/client.js';
 import { authRoutes } from '../platform/auth/routes.js';
 import { AppError, registerErrorHandler } from '../platform/errors/index.js';
 import { healthRoutes } from './app/health.js';
+import { setupRoutes } from './app/setup.js';
 
 export async function buildServer() {
   const app = Fastify({
@@ -21,9 +22,19 @@ export async function buildServer() {
     }
   });
   await app.register(cookie, { secret: config.authSecret });
-  await app.register(rateLimit, { max: 60, timeWindow: '1 minute' });
+  await app.register(rateLimit, {
+    max: 60,
+    timeWindow: '1 minute',
+    addHeadersOnExceeding: { 'x-ratelimit-limit': false, 'x-ratelimit-remaining': false, 'x-ratelimit-reset': false },
+    addHeaders: { 'x-ratelimit-limit': false, 'x-ratelimit-remaining': false, 'x-ratelimit-reset': false, 'retry-after': true },
+  });
+  app.addHook('onSend', async (_request, reply) => {
+    reply.header('cache-control', 'no-store');
+    reply.header('x-content-type-options', 'nosniff');
+  });
   await app.register(healthRoutes);
   await app.register(authRoutes);
+  await app.register(setupRoutes);
   return app;
 }
 

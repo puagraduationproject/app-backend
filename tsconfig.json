@@ -8,5 +8,5 @@
     "rootDir": ".",
     "skipLibCheck": true
   },
-  "include": ["api/**/*.ts", "config/**/*.ts", "database/**/*.ts", "platform/**/*.ts"]
+  "include": ["api/**/*.ts", "config/**/*.ts", "database/**/*.ts", "platform/**/*.ts", "modules/**/*.ts"]
 }

@@ -1,6 +1,6 @@
 # `BusinessCreated`
 
-> Status: **draft, version 0.** Fill the data before the first module emits it.
+> Status: **version 1**, emitted since 2026-10-21 by the business setup (design 7.7).
 
 | | |
 |-|-|
@@ -12,14 +12,20 @@
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| | | |
+| `name` | string | The business name |
+| `handle` | string | Its unique handle (`nova`) |
+| `business_type` | `coffee_shop`, `small_market`, `other` | What the owner picked |
+| `template_key` | `coffee_shop`, `small_market` or null | The template it starts from; null for `other` |
+| `team_size` | `alone`, `team` | The owner's answer to "just me or with a team" |
+| `owner_id` | uuid | The account that created it and owns it |
 
 ## The IDs it is about
 
-To write (for example `customer_id`, `order_id`).
+`business_id` (in the envelope).
 
 ## Changes
 
 | Version | Date | Change |
 |---------|------|--------|
 | 0 | 2026-10-19 | Draft from the design |
+| 1 | 2026-10-21 | The data, first emitted by the business setup |

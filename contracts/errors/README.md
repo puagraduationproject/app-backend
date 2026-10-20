@@ -23,5 +23,6 @@ into words in the user's language.
 | `ticket_invalid` | A sign-up ticket is wrong, used or expired (auth) |
 | `not_logged_in` | No session, or it ended (auth) |
 | `bad_origin` | A write request came from another site (auth) |
+| `handle_taken` | Another business has this handle (setup) |
 
 More codes are added here before any tool uses them.

@@ -7,6 +7,7 @@ COPY api ./api
 COPY config ./config
 COPY database ./database
 COPY platform ./platform
+COPY modules ./modules
 RUN npm run build
 
 FROM node:22-alpine

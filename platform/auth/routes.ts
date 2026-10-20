@@ -31,7 +31,6 @@ const normalize = (value: string) => value.trim().toLowerCase();
 
 function publicAccount(account: Account) {
   return {
-    id: account.id,
     email: account.email,
     name: account.name,
     phone: account.phone,

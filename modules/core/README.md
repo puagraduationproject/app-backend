@@ -21,12 +21,13 @@ stack once it is chosen:
 ## Data (schema `core`)
 
 ```
-business          id, name, slug, business_type, currency, timezone, locale,
-                  template_key, settings(jsonb), created_at
-user              id, email, phone, name, password_hash, locale
-session           id, user_id, created_at, expires_at, last_seen_at
-membership        id, business_id, user_id, role, invited_by, joined_at
-                  UNIQUE (business_id, user_id)
+business          id, name, handle (unique), business_type, currency,
+                  timezone, locale, template_key, team_size(alone|team),
+                  settings(jsonb), created_by, created_at
+account           (platform/auth: account, email_code, auth_ticket, session)
+membership        id, business_id, user_id, username, display_name, role,
+                  invited_by, joined_at
+                  UNIQUE (business_id, user_id), UNIQUE (business_id, username)
 invite            id, business_id, phone_or_email, role, token_hash, expires_at
 role              business_id, name, permissions(jsonb)
                   defaults: owner, manager, staff, viewer
