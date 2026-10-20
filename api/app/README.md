@@ -20,5 +20,5 @@ never with its internal ID; the handle names it. Errors: `not_logged_in`,
 `invalid_input` (`field`), `handle_taken`, `limit_reached` (5 businesses per account).
 
 Creating a business writes the business, the owner's membership
-(`username@handle`, the username from the email before the `@`), an audit row and the `BusinessCreated` event, in one
+(`username@handle`: the username is the first name in Latin letters, or the email before the `@` when there is none), an audit row and the `BusinessCreated` event, in one
 transaction.

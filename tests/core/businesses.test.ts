@@ -38,7 +38,7 @@ describe('business setup', () => {
     expect(response.json().error).toEqual({ code: 'invalid_input', field: 'your_name' });
   });
 
-  it('creates the business, with you as its owner, named from your email', async () => {
+  it('creates the business, with you as its owner, named from your name', async () => {
     const response = await owner.post('/api/app/businesses', { ...nova, your_name: 'Ahmed Nassem' });
     expect(response.statusCode).toBe(201);
     expect(response.json().business).toEqual({
@@ -47,7 +47,7 @@ describe('business setup', () => {
       business_type: 'coffee_shop',
       team_size: 'alone',
       role: 'owner',
-      username: 'ahmed.owner',
+      username: 'ahmed',
       display_name: 'Ahmed Nassem',
     });
     expect((await owner.get('/api/auth/me')).json().account.name).toBe('Ahmed Nassem');
@@ -74,6 +74,12 @@ describe('business setup', () => {
     const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'glow'`.execute(admin);
     expect(row.rows[0]!.template_key).toBeNull();
     expect((await other.post('/api/app/businesses', { ...nova, handle: 'x-y-z', business_type: 'spaceship' })).json().error.code).toBe('invalid_input');
+  });
+
+  it('takes the username from the email when the name has no Latin letters', async () => {
+    const arabic = await signUp(app, 'mostafa.k@example.com', 'a good password');
+    const response = await arabic.post('/api/app/businesses', { ...nova, handle: 'sokkar', your_name: 'مصطفى كمال' });
+    expect(response.json().business.username).toBe('mostafa.k');
   });
 
   it('lists only your own businesses, with no internal IDs', async () => {

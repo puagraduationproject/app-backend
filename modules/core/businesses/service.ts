@@ -40,12 +40,12 @@ export function publicBusiness(business: Business, membership: Membership) {
   };
 }
 
-export function usernameFrom(email: string, name: string | null): string {
+export function usernameFrom(name: string | null, email: string): string {
   const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30).replace(/^[._-]+|[._-]+$/g, '');
-  const fromEmail = clean(email.split('@')[0]!.split('+')[0]!);
-  if (fromEmail.length >= 2) return fromEmail;
   const fromName = clean((name ?? '').trim().split(/\s+/)[0] ?? '');
-  return fromName.length >= 2 ? fromName : 'me';
+  if (fromName.length >= 2) return fromName;
+  const fromEmail = clean(email.split('@')[0]!.split('+')[0]!);
+  return fromEmail.length >= 2 ? fromEmail : 'me';
 }
 
 const TEMPLATES: Partial<Record<BusinessType, 'coffee_shop' | 'small_market'>> = {
@@ -130,7 +130,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
         .values({
           business_id: businessId,
           user_id: account.id,
-          username: usernameFrom(account.email, yourName),
+          username: usernameFrom(yourName, account.email),
           display_name: yourName,
           role: 'owner',
         })
