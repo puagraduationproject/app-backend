@@ -83,3 +83,11 @@ app-backend/
    tools, emits events, and reads others through their services
 
 Start with [rules/](rules/README.md), then [contracts/](contracts/README.md).
+
+## Never in this repo
+
+No server information: no IP addresses, server names, hosting providers, test
+or deploy addresses, server users, folders, ports or setup, and no keys, tokens
+or real settings. The full rule is in the
+[project README](https://github.com/puagraduationproject/graduationproject#never-in-any-repo).
+If one is pushed by mistake, it is removed from the history.
