@@ -42,6 +42,7 @@ account is logged in when it sets its password.
 | New log-in email | Sent for every log-in after the first |
 | Password set or changed | Every other device is logged out |
 | Other sites | A write request whose `Origin` is not our own site is refused (`bad_origin`) |
+| Email checks | `start` and `code/send` tell whether an email has an account, so each allows only 10 an hour from one visitor IP (`limit_reached`), on top of the limits per email |
 | `proved_at` | When the person last proved it is them (log-in, code, password); sensitive actions will ask again after 15 minutes |
 
 ## Errors

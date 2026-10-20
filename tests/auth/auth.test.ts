@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { allowNewCode, client, db, lastCode, signUp, startApp, stopApp } from '../helpers.js';
+import { allowNewCode, client, db, lastCode, signUp, someIp, startApp, stopApp } from '../helpers.js';
 
 let app: FastifyInstance;
 
-const post = (url: string, payload: object) => app.inject({ method: 'POST', url, payload });
+const post = (url: string, payload: object) => app.inject({ method: 'POST', url, payload, remoteAddress: someIp() });
 
 beforeAll(async () => {
   app = await startApp();
@@ -137,5 +137,18 @@ describe('codes', () => {
   it('refuses a bad email', async () => {
     const response = await post('/api/auth/start', { email: 'not an email' });
     expect(response.json().error.code).toBe('invalid_input');
+  });
+});
+
+describe('checking emails', () => {
+  it('allows 10 email checks an hour from one visitor, then stops', async () => {
+    const visitor = client(app, undefined, '2001:db8::77');
+    for (let i = 0; i < 10; i++) {
+      expect((await visitor.post('/api/auth/start', { email: `list.${i}@example.com` })).statusCode).toBe(200);
+    }
+    const response = await visitor.post('/api/auth/start', { email: 'list.10@example.com' });
+    expect(response.statusCode).toBe(429);
+    expect(response.json().error.code).toBe('limit_reached');
+    expect((await client(app).post('/api/auth/start', { email: 'someone.new@example.com' })).statusCode).toBe(200);
   });
 });

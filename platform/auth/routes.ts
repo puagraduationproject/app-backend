@@ -17,6 +17,7 @@ const TICKET_MINUTES = 10;
 const PASSWORD_TRIES = 5;
 const LOCK_MINUTES = 15;
 const GOOGLE_COOKIE = 'gp_google';
+const EMAIL_CHECKS_PER_HOUR = 10;
 
 type Account = Selectable<AccountTable>;
 
@@ -24,6 +25,11 @@ const email = { type: 'string', minLength: 3, maxLength: 254, pattern: '^[^\\s@]
 const password = { type: 'string', minLength: 8, maxLength: 128 } as const;
 const body = (properties: Record<string, object>) => ({
   body: { type: 'object', required: Object.keys(properties), additionalProperties: false, properties },
+});
+
+const emailChecks = (properties: Record<string, object>) => ({
+  schema: body(properties),
+  config: { rateLimit: { max: EMAIL_CHECKS_PER_HOUR, timeWindow: '1 hour', keyGenerator: (request: { ip: string; url: string }) => `${request.url} ${request.ip}` } },
 });
 
 const minutesFromNow = (minutes: number) => new Date(Date.now() + minutes * 60_000);
@@ -135,7 +141,7 @@ function googleFailed(reply: FastifyReply, reason: string) {
 }
 
 export async function authRoutes(app: FastifyInstance) {
-  app.post<{ Body: { email: string } }>('/api/auth/start', { schema: body({ email }) }, async (request) => {
+  app.post<{ Body: { email: string } }>('/api/auth/start', emailChecks({ email }), async (request) => {
     const address = normalize(request.body.email);
     const account = await findAccount(address);
     if (account?.password_hash) return { next: 'password' };
@@ -144,7 +150,7 @@ export async function authRoutes(app: FastifyInstance) {
     return { next: 'code', retry_after_seconds: CODE_WAIT_SECONDS };
   });
 
-  app.post<{ Body: { email: string } }>('/api/auth/code/send', { schema: body({ email }) }, async (request) =>
+  app.post<{ Body: { email: string } }>('/api/auth/code/send', emailChecks({ email }), async (request) =>
     sendNewCode(normalize(request.body.email)),
   );
 

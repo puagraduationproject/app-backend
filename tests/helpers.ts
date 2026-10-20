@@ -43,7 +43,9 @@ export const lastCode = (to: string) => [...sentInLogMode].reverse().find((sent)
 export const allowNewCode = (to: string) =>
   db.updateTable('core.email_code').set({ created_at: new Date(Date.now() - 120_000) }).where('email', '=', to).execute();
 
-export function client(app: FastifyInstance, userAgent = CHROME_WINDOWS) {
+export const someIp = () => `2001:db8::${Math.floor(Math.random() * 0xffff).toString(16)}:${Math.floor(Math.random() * 0xffff).toString(16)}`;
+
+export function client(app: FastifyInstance, userAgent = CHROME_WINDOWS, ip = someIp()) {
   let token = '';
   async function call(method: 'GET' | 'POST', url: string, payload?: object, headers: Record<string, string> = {}) {
     const response = await app.inject({
@@ -52,6 +54,7 @@ export function client(app: FastifyInstance, userAgent = CHROME_WINDOWS) {
       payload,
       headers: { 'user-agent': userAgent, ...headers },
       cookies: token ? { [SESSION_COOKIE]: token } : {},
+      remoteAddress: ip,
     });
     const set = response.cookies.find((cookie) => cookie.name === SESSION_COOKIE);
     if (set) token = set.value;
