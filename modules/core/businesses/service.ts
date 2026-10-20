@@ -48,10 +48,6 @@ export function usernameFrom(name: string | null, email: string): string {
   return fromEmail.length >= 2 ? fromEmail : 'me';
 }
 
-const TEMPLATES: Partial<Record<BusinessType, 'coffee_shop' | 'small_market'>> = {
-  coffee_shop: 'coffee_shop',
-  small_market: 'small_market',
-};
 
 export async function handleStatus(trx: Trx, handle: string): Promise<'available' | 'invalid' | 'reserved' | 'taken'> {
   if (!HANDLE_PATTERN.test(handle) || handle.includes('--')) return 'invalid';
@@ -118,7 +114,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           name,
           handle: input.handle,
           business_type: input.business_type,
-          template_key: TEMPLATES[input.business_type] ?? null,
+          template_key: null,
           team_size: input.team_size,
           created_by: account.id,
         })

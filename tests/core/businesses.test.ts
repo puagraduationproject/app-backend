@@ -53,6 +53,11 @@ describe('business setup', () => {
     expect((await owner.get('/api/auth/me')).json().account.name).toBe('Ahmed Nassem');
   });
 
+  it('links no template yet, even for a café', async () => {
+    const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'nova'`.execute(admin);
+    expect(row.rows[0]!.template_key).toBeNull();
+  });
+
   it('writes an audit row and a BusinessCreated event', async () => {
     const audit = await sql<{ action: string }>`select action from core.audit_log`.execute(admin);
     expect(audit.rows.map((row) => row.action)).toContain('business.create');
@@ -68,7 +73,7 @@ describe('business setup', () => {
     expect(response.json().error.code).toBe('handle_taken');
   });
 
-  it('takes any of the general types; only some have a template yet', async () => {
+  it('takes any of the types; for now a type is only a name', async () => {
     const response = await other.post('/api/app/businesses', { name: 'Glow', handle: 'glow', business_type: 'beauty', team_size: 'alone', your_name: 'Mona' });
     expect(response.json().business.business_type).toBe('beauty');
     const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'glow'`.execute(admin);
