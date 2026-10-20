@@ -66,6 +66,8 @@ app-backend/
 │   ├── marketing/
 │   ├── team/
 │   └── reports/
+├── deploy/                     the test setup: our router (port 11000, owns every path) and
+│                               the compose file; real settings are never in the repo
 ├── fake/                       answers every tool from its page's examples and the seeds
 └── tests/                      isolation, schema-users, roles, tools, pages, packs, undo,
                                 order-flow, processes, rebuild
