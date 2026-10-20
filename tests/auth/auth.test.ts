@@ -1,33 +1,13 @@
-import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { sql } from 'kysely';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-
-process.env.NODE_ENV = 'test';
-process.env.MAIL_MODE = 'log';
-process.env.PUBLIC_URL ??= 'http://localhost';
-process.env.AUTH_SECRET ??= 'test-secret';
-
-const { buildServer } = await import('../../api/server.js');
-const { db } = await import('../../database/client.js');
-const { sentInLogMode } = await import('../../platform/auth/mail.js');
+import { allowNewCode, client, db, lastCode, signUp, startApp } from './helpers.js';
 
 let app: FastifyInstance;
 
 const post = (url: string, payload: object) => app.inject({ method: 'POST', url, payload });
-const lastCode = (to: string) => [...sentInLogMode].reverse().find((sent) => sent.to === to)!.code;
-const allowNewCode = (to: string) =>
-  db.updateTable('core.email_code').set({ created_at: new Date(Date.now() - 120_000) }).where('email', '=', to).execute();
 
 beforeAll(async () => {
-  await sql`drop schema if exists core cascade`.execute(db);
-  const folder = join(import.meta.dirname, '../../database/migrations/core');
-  for (const file of readdirSync(folder).filter((name) => name.endsWith('.sql')).sort()) {
-    const up = readFileSync(join(folder, file), 'utf8').split('-- migrate:down')[0];
-    await sql.raw(up).execute(db);
-  }
-  app = await buildServer();
+  app = await startApp();
 });
 
 afterAll(async () => {
@@ -107,20 +87,24 @@ describe('log in with a password', () => {
 
 describe('changing a password needs proof', () => {
   const email = 'change.test@example.com';
+  let browser: ReturnType<typeof client>;
 
   beforeAll(async () => {
-    await post('/api/auth/start', { email });
-    const { ticket } = (await post('/api/auth/code/verify', { email, code: lastCode(email) })).json();
-    await post('/api/auth/password/set', { ticket, password: 'first password' });
+    browser = await signUp(app, email, 'first password');
+  });
+
+  it('needs to be logged in', async () => {
+    const response = await post('/api/auth/password/change', { old_password: 'first password', new_password: 'second password' });
+    expect(response.json().error.code).toBe('not_logged_in');
   });
 
   it('refuses without the right old password', async () => {
-    const response = await post('/api/auth/password/change', { email, old_password: 'not it', new_password: 'second password' });
+    const response = await browser.post('/api/auth/password/change', { old_password: 'not it', new_password: 'second password' });
     expect(response.json().error.code).toBe('wrong_password');
   });
 
   it('changes with the old password', async () => {
-    await post('/api/auth/password/change', { email, old_password: 'first password', new_password: 'second password' });
+    await browser.post('/api/auth/password/change', { old_password: 'first password', new_password: 'second password' });
     expect((await post('/api/auth/password/login', { email, password: 'second password' })).statusCode).toBe(200);
   });
 

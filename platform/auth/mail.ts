@@ -10,7 +10,15 @@ const transport =
       })
     : null;
 
-export const sentInLogMode: { to: string; code: string }[] = [];
+export const sentInLogMode: { to: string; code?: string; subject?: string }[] = [];
+
+export async function sendNotice(to: string, subject: string, text: string): Promise<void> {
+  if (!transport) {
+    sentInLogMode.push({ to, subject });
+    return;
+  }
+  await transport.sendMail({ from: `PUA Graduation Project <${config.mail.gmailUser}>`, to, subject, text });
+}
 
 export async function sendCode(to: string, code: string): Promise<void> {
   if (!transport) {

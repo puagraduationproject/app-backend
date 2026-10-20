@@ -7,6 +7,7 @@ import { AppError } from '../errors/index.js';
 import { googleFinish, googleReady, googleStart } from './google.js';
 import { sendCode } from './mail.js';
 import { checkPassword, hashPassword, keyedHash, newCode, newTicket, sameHash } from './secrets.js';
+import { endOneSession, endOtherSessions, listSessions, requireSession, signIn, signOut } from './sessions.js';
 
 const CODE_MINUTES = 10;
 const CODE_TRIES = 5;
@@ -151,7 +152,7 @@ export async function authRoutes(app: FastifyInstance) {
   app.post<{ Body: { email: string; code: string } }>(
     '/api/auth/code/verify',
     { schema: body({ email, code: { type: 'string', pattern: '^[0-9]{6}$' } }) },
-    async (request) => {
+    async (request, reply) => {
       const address = normalize(request.body.email);
       const row = await db
         .selectFrom('core.email_code')
@@ -188,19 +189,26 @@ export async function authRoutes(app: FastifyInstance) {
           .returningAll()
           .executeTakeFirstOrThrow();
       }
+      if (account.password_hash || account.google_id) await signIn(request, reply, account);
       return { ticket: await issueTicket(account.id), needs_password: !account.password_hash, account: publicAccount(account) };
     },
   );
 
-  app.post<{ Body: { ticket: string } }>('/api/auth/ticket', { schema: body({ ticket: { type: 'string', maxLength: 100 } }) }, async (request) => {
-    const { account } = await accountForTicket(request.body.ticket);
-    return { needs_password: !account.password_hash, account: publicAccount(account) };
-  });
+  app.post<{ Body: { ticket: string } }>(
+    '/api/auth/ticket',
+    { schema: body({ ticket: { type: 'string', maxLength: 100 } }) },
+    async (request, reply) => {
+      const { ticketId, account } = await accountForTicket(request.body.ticket);
+      await db.updateTable('core.auth_ticket').set({ used_at: new Date() }).where('id', '=', ticketId).execute();
+      await signIn(request, reply, account);
+      return { needs_password: !account.password_hash, account: publicAccount(account) };
+    },
+  );
 
   app.post<{ Body: { ticket: string; password: string } }>(
     '/api/auth/password/set',
     { schema: body({ ticket: { type: 'string', maxLength: 100 }, password }) },
-    async (request) => {
+    async (request, reply) => {
       const { ticketId, account } = await accountForTicket(request.body.ticket);
       const updated = await db.transaction().execute(async (trx) => {
         await trx.updateTable('core.auth_ticket').set({ used_at: new Date() }).where('id', '=', ticketId).execute();
@@ -211,6 +219,8 @@ export async function authRoutes(app: FastifyInstance) {
           .returningAll()
           .executeTakeFirstOrThrow();
       });
+      const session = await signIn(request, reply, updated);
+      await endOtherSessions(updated.id, session.id, 'password_changed');
       return { account: publicAccount(updated) };
     },
   );
@@ -218,23 +228,58 @@ export async function authRoutes(app: FastifyInstance) {
   app.post<{ Body: { email: string; password: string } }>(
     '/api/auth/password/login',
     { schema: body({ email, password: { type: 'string', minLength: 1, maxLength: 128 } }) },
-    async (request) => ({ account: publicAccount(await checkAccountPassword(normalize(request.body.email), request.body.password)) }),
+    async (request, reply) => {
+      const account = await checkAccountPassword(normalize(request.body.email), request.body.password);
+      await signIn(request, reply, account);
+      return { account: publicAccount(account) };
+    },
   );
 
-  app.post<{ Body: { email: string; old_password: string; new_password: string } }>(
+  app.post<{ Body: { old_password: string; new_password: string } }>(
     '/api/auth/password/change',
-    { schema: body({ email, old_password: { type: 'string', minLength: 1, maxLength: 128 }, new_password: password }) },
-    async (request) => {
-      const account = await checkAccountPassword(normalize(request.body.email), request.body.old_password);
+    { schema: body({ old_password: { type: 'string', minLength: 1, maxLength: 128 }, new_password: password }) },
+    async (request, reply) => {
+      const { session, account } = await requireSession(request);
+      await checkAccountPassword(normalize(account.email), request.body.old_password);
       const updated = await db
         .updateTable('core.account')
         .set({ password_hash: await hashPassword(request.body.new_password), updated_at: new Date() })
         .where('id', '=', account.id)
         .returningAll()
         .executeTakeFirstOrThrow();
+      await signIn(request, reply, updated);
+      await endOtherSessions(updated.id, session.id, 'password_changed');
       return { account: publicAccount(updated) };
     },
   );
+
+  app.get('/api/auth/me', async (request) => ({ account: publicAccount((await requireSession(request)).account) }));
+
+  app.post('/api/auth/logout', async (request, reply) => {
+    await signOut(request, reply);
+    return { logged_out: true };
+  });
+
+  app.get('/api/auth/sessions', async (request) => {
+    const { session, account } = await requireSession(request);
+    return { sessions: await listSessions(account.id, session.id) };
+  });
+
+  app.post<{ Body: { id: string } }>(
+    '/api/auth/sessions/end',
+    { schema: body({ id: { type: 'string', format: 'uuid' } }) },
+    async (request) => {
+      const { account } = await requireSession(request);
+      await endOneSession(account.id, request.body.id);
+      return { ended: true };
+    },
+  );
+
+  app.post('/api/auth/sessions/end-others', async (request) => {
+    const { session, account } = await requireSession(request);
+    await endOtherSessions(account.id, session.id, 'ended_by_user');
+    return { ended: true };
+  });
 
   app.get('/api/auth/google/start', async (_request, reply) => {
     if (!googleReady()) return googleFailed(reply, 'not_ready');

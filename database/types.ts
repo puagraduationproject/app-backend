@@ -37,8 +37,27 @@ export interface AuthTicketTable {
   created_at: Generated<Date>;
 }
 
+export type SessionEndReason = 'logged_out' | 'ended_by_user' | 'password_changed' | 'device_limit' | 'browser_changed';
+
+export interface SessionTable {
+  id: Generated<string>;
+  account_id: string;
+  token_hash: string;
+  browser: string;
+  user_agent: string;
+  first_ip: string;
+  last_ip: string;
+  created_at: Generated<Date>;
+  last_seen_at: Generated<Date>;
+  proved_at: Generated<Date>;
+  expires_at: Timestamp;
+  ended_at: NullableTimestamp;
+  end_reason: SessionEndReason | null;
+}
+
 export interface Database {
   'core.account': AccountTable;
   'core.email_code': EmailCodeTable;
   'core.auth_ticket': AuthTicketTable;
+  'core.session': SessionTable;
 }

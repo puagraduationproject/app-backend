@@ -4,7 +4,7 @@ import Fastify from 'fastify';
 import { config } from '../config/index.js';
 import { db } from '../database/client.js';
 import { authRoutes } from '../platform/auth/routes.js';
-import { registerErrorHandler } from '../platform/errors/index.js';
+import { AppError, registerErrorHandler } from '../platform/errors/index.js';
 import { healthRoutes } from './app/health.js';
 
 export async function buildServer() {
@@ -13,6 +13,13 @@ export async function buildServer() {
     trustProxy: (_address: string, hop: number) => hop === 0,
   });
   registerErrorHandler(app);
+  const ownOrigin = new URL(config.publicUrl).origin;
+  app.addHook('onRequest', async (request) => {
+    const origin = request.headers.origin;
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method) && origin && origin !== ownOrigin) {
+      throw new AppError('bad_origin', 403, 'Requests must come from our own site');
+    }
+  });
   await app.register(cookie, { secret: config.authSecret });
   await app.register(rateLimit, { max: 60, timeWindow: '1 minute' });
   await app.register(healthRoutes);

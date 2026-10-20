@@ -21,5 +21,7 @@ into words in the user's language.
 | `locked` | Too many wrong passwords; wait (auth) |
 | `no_password` | The account has no password yet (auth) |
 | `ticket_invalid` | A sign-up ticket is wrong, used or expired (auth) |
+| `not_logged_in` | No session, or it ended (auth) |
+| `bad_origin` | A write request came from another site (auth) |
 
 More codes are added here before any tool uses them.

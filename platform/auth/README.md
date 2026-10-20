@@ -1,6 +1,6 @@
 # Platform: auth
 
-Sign up and log in (design 7.6). Sessions come in a later step.
+Sign up, log in and sessions (design 7.6).
 
 Used by every module. Has its own tests.
 
@@ -11,17 +11,38 @@ Used by every module. Has its own tests.
 | `POST /api/auth/start` | `email` | `next`: `code` (a code was sent), `password` (the account has one), or `google` (Google-only account; a code can still be asked for) |
 | `POST /api/auth/code/send` | `email` | `sent: true`, `retry_after_seconds` |
 | `POST /api/auth/code/verify` | `email`, `code` | `ticket`, `needs_password` (true when the account has no password yet), `account` |
-| `POST /api/auth/password/set` | `ticket`, `password` | `account` |
-| `POST /api/auth/password/login` | `email`, `password` | `account` |
-| `POST /api/auth/password/change` | `email`, `old_password`, `new_password` | `account` |
+| `POST /api/auth/password/set` | `ticket`, `password` | `account`; logs in; logs out every other device |
+| `POST /api/auth/password/login` | `email`, `password` | `account`; logs in |
+| `POST /api/auth/password/change` | `old_password`, `new_password` (logged in) | `account`; logs out every other device |
 | `GET /api/auth/google/start` | | Redirect to Google |
 | `GET /api/auth/google/callback` | from Google | Redirect to `/account#ticket=...` |
-| `POST /api/auth/ticket` | `ticket` | `account`, `needs_password` |
+| `POST /api/auth/ticket` | `ticket` | `account`, `needs_password`; uses the ticket and logs in |
+| `GET /api/auth/me` | (logged in) | `account` |
+| `POST /api/auth/logout` | | `logged_out: true` |
+| `GET /api/auth/sessions` | (logged in) | `sessions`: `{ id, browser, ip, created_at, last_seen_at, current }` |
+| `POST /api/auth/sessions/end` | `id` (logged in) | `ended: true` |
+| `POST /api/auth/sessions/end-others` | (logged in) | `ended: true` |
 
 `account` is `{ id, email, name, phone, language, has_password, has_google, created_at }`.
 
 A ticket comes from a checked code or from Google. It lasts 10 minutes and
-works once for `password/set`; `ticket` only reads the account it belongs to.
+works once, for `password/set` or `ticket`.
+
+`code/verify` logs in when the account already has a password or Google; a new
+account is logged in when it sets its password.
+
+## Sessions
+
+| Rule | |
+|------|-|
+| The key | 32 random bytes in the cookie `__Host-gp_session` (HttpOnly, Secure, SameSite=Lax); the database keeps only its hash |
+| How long | Ends after 7 days unused, and 30 days after log-in in any case |
+| Devices | At most 5 per account; a sixth log-in ends the least recently used |
+| Browser check | The browser and system are saved at log-in ("Chrome on Windows"); if the key shows up from another one, the session ends. An IP change is only recorded |
+| New log-in email | Sent for every log-in after the first |
+| Password set or changed | Every other device is logged out |
+| Other sites | A write request whose `Origin` is not our own site is refused (`bad_origin`) |
+| `proved_at` | When the person last proved it is them (log-in, code, password); sensitive actions will ask again after 15 minutes |
 
 ## Errors
 
@@ -38,5 +59,8 @@ works once for `password/set`; `ticket` only reads the account it belongs to.
 | `ticket_invalid` | The ticket is wrong, used or expired |
 | `outside_failed` | Sending the email or talking to Google failed |
 | `limit_reached` | Too many requests from one place |
+| `not_logged_in` | No session, or it ended (401) |
+| `not_found` | No such device for this account |
+| `bad_origin` | The request came from another site (403) |
 
 Response shape: `{ "error": { "code": "wrong_code", "message": "for logs only", "field": "code" } }`.
