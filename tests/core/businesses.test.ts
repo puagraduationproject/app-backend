@@ -38,7 +38,7 @@ describe('business setup', () => {
     expect(response.json().error).toEqual({ code: 'invalid_input', field: 'your_name' });
   });
 
-  it('creates the business, with you as its owner, ahmed@nova', async () => {
+  it('creates the business, with you as its owner, named from your email', async () => {
     const response = await owner.post('/api/app/businesses', { ...nova, your_name: 'Ahmed Nassem' });
     expect(response.statusCode).toBe(201);
     expect(response.json().business).toEqual({
@@ -47,7 +47,7 @@ describe('business setup', () => {
       business_type: 'coffee_shop',
       team_size: 'alone',
       role: 'owner',
-      username: 'ahmed',
+      username: 'ahmed.owner',
       display_name: 'Ahmed Nassem',
     });
     expect((await owner.get('/api/auth/me')).json().account.name).toBe('Ahmed Nassem');
@@ -66,6 +66,14 @@ describe('business setup', () => {
     const response = await other.post('/api/app/businesses', { ...nova, name: 'Another Nova', your_name: 'Mona' });
     expect(response.statusCode).toBe(409);
     expect(response.json().error.code).toBe('handle_taken');
+  });
+
+  it('takes any of the general types; only some have a template yet', async () => {
+    const response = await other.post('/api/app/businesses', { name: 'Glow', handle: 'glow', business_type: 'beauty', team_size: 'alone', your_name: 'Mona' });
+    expect(response.json().business.business_type).toBe('beauty');
+    const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'glow'`.execute(admin);
+    expect(row.rows[0]!.template_key).toBeNull();
+    expect((await other.post('/api/app/businesses', { ...nova, handle: 'x-y-z', business_type: 'spaceship' })).json().error.code).toBe('invalid_input');
   });
 
   it('lists only your own businesses, with no internal IDs', async () => {
@@ -88,7 +96,7 @@ describe('the wall between businesses', () => {
     await db.transaction().execute(async (trx) => {
       await sql`select set_config('app.account_id', ${mona}, true)`.execute(trx);
       const seen = await trx.selectFrom('core.business').select('handle').execute();
-      expect(seen.map((row) => row.handle)).toEqual(['bean']);
+      expect(seen.map((row) => row.handle).sort()).toEqual(['bean', 'glow']);
       expect(await trx.selectFrom('core.membership').select('username').where('business_id', '=', novaId).execute()).toEqual([]);
       expect(await trx.selectFrom('core.audit_log').selectAll().execute()).toEqual([]);
       const changed = await trx.updateTable('core.business').set({ name: 'Taken over' }).where('id', '=', novaId).executeTakeFirst();

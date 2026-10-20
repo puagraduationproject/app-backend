@@ -40,12 +40,18 @@ export function publicBusiness(business: Business, membership: Membership) {
   };
 }
 
-export function usernameFrom(name: string | null, email: string): string {
-  const fromName = (name ?? '').trim().split(/\s+/)[0]?.toLowerCase().replace(/[^a-z0-9]/g, '') ?? '';
-  const fromEmail = email.split('@')[0]!.toLowerCase().replace(/[^a-z0-9._-]/g, '').replace(/^[._-]+|[._-]+$/g, '');
-  const pick = fromName.length >= 2 ? fromName : fromEmail;
-  return pick.length >= 2 ? pick.slice(0, 30).replace(/[._-]+$/, '') : 'me';
+export function usernameFrom(email: string, name: string | null): string {
+  const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30).replace(/^[._-]+|[._-]+$/g, '');
+  const fromEmail = clean(email.split('@')[0]!.split('+')[0]!);
+  if (fromEmail.length >= 2) return fromEmail;
+  const fromName = clean((name ?? '').trim().split(/\s+/)[0] ?? '');
+  return fromName.length >= 2 ? fromName : 'me';
 }
+
+const TEMPLATES: Partial<Record<BusinessType, 'coffee_shop' | 'small_market'>> = {
+  coffee_shop: 'coffee_shop',
+  small_market: 'small_market',
+};
 
 export async function handleStatus(trx: Trx, handle: string): Promise<'available' | 'invalid' | 'reserved' | 'taken'> {
   if (!HANDLE_PATTERN.test(handle) || handle.includes('--')) return 'invalid';
@@ -112,7 +118,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           name,
           handle: input.handle,
           business_type: input.business_type,
-          template_key: input.business_type === 'other' ? null : input.business_type,
+          template_key: TEMPLATES[input.business_type] ?? null,
           team_size: input.team_size,
           created_by: account.id,
         })
@@ -124,7 +130,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
         .values({
           business_id: businessId,
           user_id: account.id,
-          username: usernameFrom(yourName, account.email),
+          username: usernameFrom(account.email, yourName),
           display_name: yourName,
           role: 'owner',
         })

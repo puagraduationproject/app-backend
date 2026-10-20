@@ -14,8 +14,8 @@
 |-------|------|---------|
 | `name` | string | The business name |
 | `handle` | string | Its unique handle (`nova`) |
-| `business_type` | `coffee_shop`, `small_market`, `other` | What the owner picked |
-| `template_key` | `coffee_shop`, `small_market` or null | The template it starts from; null for `other` |
+| `business_type` | `coffee_shop`, `restaurant`, `bakery`, `small_market`, `pharmacy`, `clothing`, `electronics`, `beauty`, `services`, `online`, `other` | What the owner picked |
+| `template_key` | `coffee_shop`, `small_market` or null | The template it starts from; null when the type has no template yet |
 | `team_size` | `alone`, `team` | The owner's answer to "just me or with a team" |
 | `owner_id` | uuid | The account that created it and owns it |
 

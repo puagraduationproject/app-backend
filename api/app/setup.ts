@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { checkHandle, createBusiness, listMine, type NewBusiness } from '../../modules/core/businesses/service.js';
+import { BUSINESS_TYPES } from '../../database/types.js';
 import { requireSession } from '../../platform/auth/sessions.js';
 
 const handle = { type: 'string', minLength: 1, maxLength: 30 } as const;
@@ -31,7 +32,7 @@ export async function setupRoutes(app: FastifyInstance) {
           properties: {
             name: { type: 'string', minLength: 1, maxLength: 80 },
             handle,
-            business_type: { enum: ['coffee_shop', 'small_market', 'other'] },
+            business_type: { enum: [...BUSINESS_TYPES] },
             team_size: { enum: ['alone', 'team'] },
             your_name: { type: 'string', maxLength: 80 },
           },

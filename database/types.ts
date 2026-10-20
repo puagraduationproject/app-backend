@@ -55,7 +55,11 @@ export interface SessionTable {
   end_reason: SessionEndReason | null;
 }
 
-export type BusinessType = 'coffee_shop' | 'small_market' | 'other';
+export const BUSINESS_TYPES = [
+  'coffee_shop', 'restaurant', 'bakery', 'small_market', 'pharmacy', 'clothing',
+  'electronics', 'beauty', 'services', 'online', 'other',
+] as const;
+export type BusinessType = (typeof BUSINESS_TYPES)[number];
 export type Role = 'owner' | 'manager' | 'staff' | 'viewer';
 
 export interface BusinessTable {

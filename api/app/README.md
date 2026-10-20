@@ -13,12 +13,12 @@ Same tools as every other door; same permissions and audit.
 |-------|-------|--------|
 | `GET /api/app/businesses` | (logged in) | `businesses`: the person's businesses |
 | `GET /api/app/handles/:handle` | (logged in) | `handle`, `available`, `reason`: `invalid`, `reserved`, `taken` or null |
-| `POST /api/app/businesses` | `name`, `handle`, `business_type` (`coffee_shop`, `small_market`, `other`), `team_size` (`alone`, `team`), `your_name` (needed when the account has no name) | `201`, `business` |
+| `POST /api/app/businesses` | `name`, `handle`, `business_type` (`coffee_shop`, `restaurant`, `bakery`, `small_market`, `pharmacy`, `clothing`, `electronics`, `beauty`, `services`, `online`, `other`), `team_size` (`alone`, `team`), `your_name` (needed when the account has no name) | `201`, `business` |
 
 A business is shown as `{ name, handle, business_type, team_size, role, username, display_name }`,
 never with its internal ID; the handle names it. Errors: `not_logged_in`,
 `invalid_input` (`field`), `handle_taken`, `limit_reached` (5 businesses per account).
 
 Creating a business writes the business, the owner's membership
-(`username@handle`), an audit row and the `BusinessCreated` event, in one
+(`username@handle`, the username from the email before the `@`), an audit row and the `BusinessCreated` event, in one
 transaction.
