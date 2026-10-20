@@ -9,8 +9,10 @@ The design is in
 [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md).
 This repo follows it; when the design changes, this repo changes with it.
 
-The stack is not chosen yet. Folders hold their pages now; code comes once the
-structure is final and the team picks the stack.
+The stack is agreed (design section 22, can change later): TypeScript on
+Node 22, Fastify, Kysely, plain SQL migrations per module schema, PostgreSQL 16
+with row-level security, pg-boss, JSON Schema contracts, Vitest. Folders hold
+their pages now; code follows the pages.
 
 ## The other repos
 
