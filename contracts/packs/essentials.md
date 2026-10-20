@@ -23,6 +23,8 @@
 - [`ai.save_skill`](../tools/ai/save_skill.md)
 - [`ai.get_permissions`](../tools/ai/get_permissions.md)
 - [`ai.set_permission`](../tools/ai/set_permission.md)
+- [`ai.list_models`](../tools/ai/list_models.md)
+- [`ai.set_model`](../tools/ai/set_model.md)
 - [`core.get_business`](../tools/core/get_business.md)
 - [`core.update_business`](../tools/core/update_business.md)
 - [`core.list_packs`](../tools/core/list_packs.md)

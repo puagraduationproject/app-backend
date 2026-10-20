@@ -27,11 +27,11 @@ app-backend/
 ├── README.md
 ├── rules/                      one page each: architecture, modules, tools, events, contracts
 ├── contracts/                  the backend's promise to everyone else (design 4.4)
-│   ├── tools/                  one reference page per tool, one folder per module (159)
+│   ├── tools/                  one reference page per tool, one folder per module (161)
 │   │   ├── core/ (12)  erp/ (54)  crm/ (31)  channels/ (12)  store/ (10)
 │   │   └── studio/ (10)  marketing/ (6)  team/ (10)  reports/ (5)  ai/ (9)
 │   ├── packs/                  essentials and one page per pack (30)
-│   ├── events/                 the envelope and one page per event (41)
+│   ├── events/                 the envelope and one page per event (42)
 │   ├── cards/                  one page per card (9)
 │   ├── values/                 IDs, money, order statuses, roles, channels, payment methods,
 │   │                           AI permission settings

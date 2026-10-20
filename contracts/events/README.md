@@ -11,10 +11,11 @@ Every event has: `event_id`, `type`, `version`, `business_id`, `occurred_at`,
 `actor`, `correlation_id`, `causation_id` (the event that caused it), the IDs it
 is about (`customer_id`, `order_id`, ...), and its data.
 
-## All events (41)
+## All events (42)
 
 | Event | Emitted by | Listened to by |
 |-------|------------|----------------|
+| [`AiModelChanged`](AiModelChanged.md) | AI layer | none yet |
 | [`AiPermissionChanged`](AiPermissionChanged.md) | AI layer | none yet |
 | [`BookingCreated`](BookingCreated.md) | CRM | AI layer |
 | [`BusinessCreated`](BusinessCreated.md) | Core | AI layer |

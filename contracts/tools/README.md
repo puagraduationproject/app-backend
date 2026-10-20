@@ -24,7 +24,7 @@ checks the backend against it.
 `module.verb_noun`, always. The same names everywhere: a `customer_id` from CRM is
 what Marketing takes.
 
-## All tools (159)
+## All tools (161)
 
 ### Core (12)
 
@@ -221,7 +221,7 @@ what Marketing takes.
 | [`reports.get_home_numbers`](./reports/get_home_numbers.md) | The key numbers on Home | R | `essentials` | 1 |
 | [`reports.get_value_report`](./reports/get_value_report.md) | Money saved and earned this month, in pounds | R | `essentials` | 1 |
 
-### AI layer (9)
+### AI layer (11)
 
 | Tool | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
@@ -234,3 +234,5 @@ what Marketing takes.
 | [`ai.save_skill`](./ai/save_skill.md) | Saves a new or edited skill, after the owner confirms | R | `essentials` | 1 |
 | [`ai.get_permissions`](./ai/get_permissions.md) | What the AI may do here: each area's setting and limit (6.6) | R | `essentials` | 1 |
 | [`ai.set_permission`](./ai/set_permission.md) | Changes a setting. Called only by the app when the owner taps it; never by the AI | R | `essentials` | 1 |
+| [`ai.list_models`](./ai/list_models.md) | The models the owner can pick, with where each runs, what it costs and what data leaves our server | R | `essentials` | 2 |
+| [`ai.set_model`](./ai/set_model.md) | Sets the model per face. Called only by the app when the owner taps it; never by the AI | W | `essentials` | 2 |

@@ -57,6 +57,6 @@ them:
 | Reading images (menu photos, invoices) | AI layer | 2 |
 | Image model (post backgrounds, product shots) | Studio | 2 |
 
-Every model in this list is an open model the team runs, the same rule as the
-main models. Using a commercial model for any of them needs the team to change
-that rule first.
+The models in this list follow the same rule as the main models: open models
+the team runs by default, and a commercial one only where the owner picks it.
+The tools never depend on which model calls them.
