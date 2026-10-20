@@ -84,6 +84,24 @@ app-backend/
 
 Start with [rules/](rules/README.md), then [contracts/](contracts/README.md).
 
+## Asking other teams
+
+Requests between teams live in the `team-handoffs` repo, never in chats alone:
+
+- **We need something from frontend** (a screen, texts, a card): a request in
+  `fullstack-security/frontend/requests/FE-<number>-<name>.md`, from
+  `templates/request.md`, with `from: backend`. It lists the screens, every
+  text (Arabic first), the error codes, the tools and cards involved (linked to
+  their pages here), and example responses so frontend can build before the
+  real API is ready. The same way for security (`SEC-`) and the AI teams
+  (`AGT-`, `DATA-`)
+- **Others need something from us:** their requests are in
+  `fullstack-security/backend/requests/` (`BE-`). We set the status
+- After a request is pushed, send its link on WhatsApp or Discord. Changes are
+  edited in the file, with a line under Changes saying who agreed
+- When frontend delivers in `app-web`, the backend team deploys it with the
+  backend
+
 ## Never in this repo
 
 No server information: no IP addresses, server names, hosting providers, test
