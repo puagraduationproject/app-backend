@@ -17,7 +17,8 @@
 | `business_type` | `coffee_shop`, `small_market`, `grocery`, `bakery`, `restaurant`, `other` | What the owner picked |
 | `template_key` | `coffee_shop`, `small_market` or null | The template it starts from: `coffee_shop` for a café, `small_market` for a small market or a grocery, null for the kinds with no template yet |
 | `sells` | string or null | What the owner sells, in their words (asked after "Something else") |
-| `team_size` | `alone`, `team` | The owner's answer to "just me or with a team" |
+| `location` | `{ city, area }` or null | Where it is: its first location (`city` is a key such as `alexandria`, `area` is what the owner typed) |
+| `team_size` | `alone`, `team` or null | The owner's answer to "just me or with a team"; null since the question was removed |
 | `owner_id` | uuid | The account that created it and owns it |
 
 ## The IDs it is about
@@ -30,4 +31,4 @@
 |---------|------|--------|
 | 0 | 2026-10-19 | Draft from the design |
 | 1 | 2026-10-21 | The data, first emitted by the business setup |
-| 1 | 2026-10-21 | Fewer kinds and `grocery` added; `template_key` set from the kind; `sells` added (ALL-002) |
+| 1 | 2026-10-21 | Fewer kinds and `grocery` added; `template_key` set from the kind; `sells` and `location` added; `team_size` can be null (ALL-002) |

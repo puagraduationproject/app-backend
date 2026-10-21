@@ -67,7 +67,7 @@ export interface BusinessTable {
   business_type: BusinessType;
   template_key: TemplateKey | null;
   sells: string | null;
-  team_size: 'alone' | 'team';
+  team_size: 'alone' | 'team' | null;
   currency: Generated<string>;
   timezone: Generated<string>;
   locale: Generated<string>;
@@ -86,6 +86,25 @@ export interface MembershipTable {
   role: Role;
   invited_by: string | null;
   joined_at: Generated<Date>;
+}
+
+export interface LocationTable {
+  id: Generated<string>;
+  business_id: string;
+  name: string;
+  city: string;
+  area: string;
+  address: string | null;
+  created_at: Generated<Date>;
+}
+
+export const SETUP_STEPS = ['language', 'your_name', 'business_name', 'business_type', 'location', 'done'] as const;
+export type SetupStep = (typeof SETUP_STEPS)[number];
+
+export interface SetupStepTable {
+  account_id: string;
+  step: SetupStep;
+  reached_at: Generated<Date>;
 }
 
 export interface AuditLogTable {
@@ -115,6 +134,8 @@ export interface OutboxTable {
 export interface Database {
   'core.business': BusinessTable;
   'core.membership': MembershipTable;
+  'core.location': LocationTable;
+  'core.setup_step': SetupStepTable;
   'core.audit_log': AuditLogTable;
   'core.outbox': OutboxTable;
   'core.account': AccountTable;

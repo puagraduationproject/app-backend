@@ -101,7 +101,26 @@ describe('business setup', () => {
       { key: 'restaurant', ready: false },
       { key: 'other', ready: false },
     ]);
+    expect((await owner.get('/api/app/setup')).json().cities.slice(0, 3)).toEqual(['cairo', 'giza', 'alexandria']);
+    expect((await owner.get('/api/app/setup')).json().cities).toHaveLength(27);
     expect((await client(app).get('/api/app/setup')).statusCode).toBe(401);
+  });
+
+  it('keeps where it is as its first location, and no longer asks who works in it', async () => {
+    const response = await other.post('/api/app/businesses', { name: 'Smouha Corner', handle: 'smouha-corner', business_type: 'grocery', city: 'alexandria', area: ' Smouha ', your_name: 'Mona' });
+    expect(response.statusCode).toBe(201);
+    expect(response.json().business.team_size).toBeNull();
+    const rows = await sql<{ name: string; city: string; area: string }>`select l.name, l.city, l.area from core.location l join core.business b on b.id = l.business_id where b.handle = 'smouha-corner'`.execute(admin);
+    expect(rows.rows).toEqual([{ name: 'Smouha Corner', city: 'alexandria', area: 'Smouha' }]);
+    const events = await sql<{ payload: { data: { location: unknown } } }>`select payload from core.outbox where payload->'data'->>'handle' = 'smouha-corner'`.execute(admin);
+    expect(events.rows[0]!.payload.data.location).toEqual({ city: 'alexandria', area: 'Smouha' });
+  });
+
+  it('refuses a city not on the list, or a city without its area', async () => {
+    const base = { name: 'Somewhere', handle: 'somewhere', business_type: 'bakery', your_name: 'Mona' };
+    expect((await other.post('/api/app/businesses', { ...base, city: 'paris', area: 'Marais' })).json().error).toEqual({ code: 'invalid_input', field: 'city' });
+    expect((await other.post('/api/app/businesses', { ...base, city: 'cairo' })).json().error.code).toBe('invalid_input');
+    expect((await other.post('/api/app/businesses', { ...base, city: 'cairo', area: '   ' })).json().error).toEqual({ code: 'invalid_input', field: 'area' });
   });
 
   it('starts a kind with no template from the essentials only', async () => {
@@ -208,7 +227,8 @@ describe('the wall between businesses', () => {
     await db.transaction().execute(async (trx) => {
       await sql`select set_config('app.account_id', ${mona}, true)`.execute(trx);
       const seen = await trx.selectFrom('core.business').select('handle').execute();
-      expect(seen.map((row) => row.handle).sort()).toEqual(['bean', 'glow', 'mona-style']);
+      expect(seen.map((row) => row.handle).sort()).toEqual(['bean', 'glow', 'mona-style', 'smouha-corner']);
+      expect(await trx.selectFrom('core.location').selectAll().execute()).toEqual([]);
       expect(await trx.selectFrom('core.membership').select('username').where('business_id', '=', novaId).execute()).toEqual([]);
       expect(await trx.selectFrom('core.audit_log').selectAll().execute()).toEqual([]);
       const changed = await trx.updateTable('core.business').set({ name: 'Taken over' }).where('id', '=', novaId).executeTakeFirst();

@@ -6,6 +6,7 @@ import { AppError } from '../../errors/index.js';
 import { emit } from '../../outbox/index.js';
 import { inContext, type Trx } from '../../tenancy/index.js';
 import { HANDLE_PATTERN, suggestHandle, usernameFrom } from './names.js';
+import { CITIES } from './places.js';
 import { RESERVED } from './reserved.js';
 
 const BUSINESSES_PER_ACCOUNT = 5;
@@ -23,6 +24,8 @@ const TEMPLATES: Record<BusinessType, TemplateKey | null> = {
 
 export const businessTypes = () => BUSINESS_TYPES.map((key) => ({ key, ready: TEMPLATES[key] !== null }));
 
+export type City = (typeof CITIES)[number];
+
 type Account = Selectable<AccountTable>;
 type Business = Selectable<BusinessTable>;
 type Membership = Selectable<MembershipTable>;
@@ -32,7 +35,9 @@ export type NewBusiness = {
   handle: string;
   business_type: BusinessType;
   sells?: string;
-  team_size: 'alone' | 'team';
+  city?: City;
+  area?: string;
+  team_size?: 'alone' | 'team';
   your_name?: string;
   idempotency_key?: string;
 };
@@ -96,9 +101,11 @@ async function madeEarlier(trx: Trx, accountId: string, key: string | undefined)
 export async function createBusiness(account: Account, input: NewBusiness) {
   const name = input.name.trim();
   const sells = input.sells?.trim() || null;
+  const area = input.area?.trim();
   const yourName = input.your_name?.trim() || account.name;
   if (!name) throw new AppError('invalid_input', 400, 'The business name is empty', { field: 'name' });
   if (!yourName) throw new AppError('invalid_input', 400, 'Your name is needed', { field: 'your_name' });
+  if (input.city && !area) throw new AppError('invalid_input', 400, 'The area is empty', { field: 'area' });
 
   const businessId = randomUUID();
   try {
@@ -128,7 +135,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           business_type: input.business_type,
           template_key: TEMPLATES[input.business_type],
           sells,
-          team_size: input.team_size,
+          team_size: input.team_size ?? null,
           idempotency_key: input.idempotency_key ?? null,
           created_by: account.id,
         })
@@ -147,6 +154,11 @@ export async function createBusiness(account: Account, input: NewBusiness) {
         .returningAll()
         .executeTakeFirstOrThrow();
 
+      const location = input.city && area ? { city: input.city, area } : null;
+      if (location) {
+        await trx.insertInto('core.location').values({ business_id: businessId, name, ...location }).execute();
+      }
+
       const actor = { type: 'user' as const, id: account.id };
       const shown = publicBusiness(business, membership);
       await audit(trx, { businessId, actor, action: 'business.create', objectType: 'business', objectId: businessId, after: shown });
@@ -161,6 +173,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           business_type: business.business_type,
           template_key: business.template_key,
           sells: business.sells,
+          location,
           team_size: business.team_size,
           owner_id: account.id,
         },

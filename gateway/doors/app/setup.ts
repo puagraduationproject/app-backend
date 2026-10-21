@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { businessTypes, checkHandle, createBusiness, listMine, suggestNames, type NewBusiness } from '../../../kernel/index/businesses/service.js';
-import { BUSINESS_TYPES } from '../../../database/types.js';
+import { CITIES } from '../../../kernel/index/businesses/places.js';
+import { BUSINESS_TYPES, SETUP_STEPS, type SetupStep } from '../../../database/types.js';
+import { recordSetupStep } from '../../shell/funnel.js';
 import { requireSession } from '../../shell/sessions.js';
 
 const handle = { type: 'string', minLength: 1, maxLength: 30 } as const;
@@ -15,8 +17,18 @@ const handleAnswer = (status: Awaited<ReturnType<typeof checkHandle>>) => ({
 export async function setupRoutes(app: FastifyInstance) {
   app.get('/api/app/setup', async (request) => {
     await requireSession(request);
-    return { business_types: businessTypes() };
+    return { business_types: businessTypes(), cities: CITIES };
   });
+
+  app.post<{ Body: { step: SetupStep } }>(
+    '/api/app/setup/steps',
+    { schema: { body: { type: 'object', required: ['step'], additionalProperties: false, properties: { step: { enum: [...SETUP_STEPS] } } } } },
+    async (request) => {
+      const { account } = await requireSession(request);
+      await recordSetupStep(account.id, request.body.step);
+      return { recorded: true };
+    },
+  );
 
   app.get('/api/app/businesses', async (request) => {
     const { account } = await requireSession(request);
@@ -48,13 +60,16 @@ export async function setupRoutes(app: FastifyInstance) {
       schema: {
         body: {
           type: 'object',
-          required: ['name', 'handle', 'business_type', 'team_size'],
+          required: ['name', 'handle', 'business_type'],
           additionalProperties: false,
+          dependencies: { city: ['area'], area: ['city'] },
           properties: {
             name,
             handle,
             business_type: { enum: [...BUSINESS_TYPES] },
             sells: { type: 'string', maxLength: 120 },
+            city: { enum: [...CITIES] },
+            area: { type: 'string', minLength: 1, maxLength: 60 },
             team_size: { enum: ['alone', 'team'] },
             your_name: yourName,
             idempotency_key: { type: 'string', format: 'uuid' },

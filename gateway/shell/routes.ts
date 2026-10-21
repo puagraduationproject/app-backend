@@ -260,6 +260,21 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.get('/api/auth/me', async (request) => ({ account: publicAccount((await requireSession(request)).account) }));
 
+  app.post<{ Body: { language: 'ar' | 'en' } }>(
+    '/api/auth/language',
+    { schema: body({ language: { enum: ['ar', 'en'] } }) },
+    async (request) => {
+      const { account } = await requireSession(request);
+      const updated = await db
+        .updateTable('core.account')
+        .set({ language: request.body.language, updated_at: new Date() })
+        .where('id', '=', account.id)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      return { account: publicAccount(updated) };
+    },
+  );
+
   app.post('/api/auth/logout', async (request, reply) => {
     await signOut(request, reply);
     return { logged_out: true };

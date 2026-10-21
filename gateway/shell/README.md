@@ -7,6 +7,10 @@ business data.
 
 Has its own tests.
 
+Also keeps, per account, how far the person got in the business setup
+(`funnel.ts`, the table `core.setup_step`): it belongs to the users section, since
+there is no business yet. The route is on the [app door](../doors/app/README.md).
+
 ## Routes (app door, `/api/auth/`)
 
 | Route | Input | Output |
@@ -21,6 +25,7 @@ Has its own tests.
 | `GET /api/auth/google/callback` | from Google | Redirect to `/account#ticket=...` |
 | `POST /api/auth/ticket` | `ticket` | `account`, `needs_password`; uses the ticket and logs in |
 | `GET /api/auth/me` | (logged in) | `account` |
+| `POST /api/auth/language` | `language`: `ar` or `en` (logged in) | `account`; the language the app and the AI use with this person. New accounts start in Arabic |
 | `POST /api/auth/logout` | | `logged_out: true` |
 | `GET /api/auth/sessions` | (logged in) | `sessions`: `{ id, browser, ip, created_at, last_seen_at, current }` |
 | `POST /api/auth/sessions/end` | `id` (logged in) | `ended: true` |
