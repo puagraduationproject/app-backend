@@ -42,12 +42,13 @@ app-backend/
 ├── rules/                      one page each: parts, architecture, modules, system calls,
 │                               events, contracts
 ├── contracts/                  the backend's promise to everyone else (design 4.4)
-│   ├── syscalls/               one reference page per system call, one folder per module (161)
+│   ├── syscalls/               one reference page per system call, one folder per module (164)
 │   │   ├── core/ (12)  erp/ (54)  crm/ (31)  channels/ (12)  store/ (10)
-│   │   └── studio/ (10)  marketing/ (6)  team/ (10)  reports/ (5)  ai/ (9)
+│   │   ├── studio/ (10)  marketing/ (6)  team/ (10)  reports/ (5)  ai/ (12)
+│   │   └── ogr/ (2)
 │   ├── packs/                  essentials and one page per pack (30)
 │   ├── events/                 the envelope and one page per event (42)
-│   ├── cards/                  one page per card (9)
+│   ├── cards/                  one page per card (10)
 │   ├── values/                 IDs, money, order statuses, roles, channels, payment methods,
 │   │                           AI permission settings
 │   ├── errors/                 error codes

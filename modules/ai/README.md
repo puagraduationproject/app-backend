@@ -13,7 +13,8 @@ Memory, the business's skills, schedules, AI permission settings, threads, knowl
 Whether the business brain is stored here, the same for every model, is
 proposed; the AI team agrees it with the backend (design section 26).
 
-## System calls (9)
+## System calls (12)
 
 The `ai.*` pages are in [contracts/syscalls/ai](../../contracts/syscalls/README.md),
-for example `ai.find_syscalls`, `ai.remember`, `ai.schedule` and `ai.save_skill`.
+for example `ai.find_syscalls`, `ai.remember`, `ai.schedule`, `ai.save_skill`
+and `ai.ask_question`.

@@ -12,19 +12,22 @@
 | Store | The shop page: the catalog and the chat |
 | Reports | Home numbers, from whatever packs are on |
 
-## System calls (56)
+## System calls (59)
 
 - [`ai.find_syscalls`](../syscalls/ai/find_syscalls.md)
 - [`ai.load_skill`](../syscalls/ai/load_skill.md)
 - [`ai.search_knowledge`](../syscalls/ai/search_knowledge.md)
 - [`ai.remember`](../syscalls/ai/remember.md)
 - [`ai.ask_approval`](../syscalls/ai/ask_approval.md)
+- [`ai.ask_question`](../syscalls/ai/ask_question.md)
 - [`ai.schedule`](../syscalls/ai/schedule.md)
 - [`ai.save_skill`](../syscalls/ai/save_skill.md)
 - [`ai.get_permissions`](../syscalls/ai/get_permissions.md)
 - [`ai.set_permission`](../syscalls/ai/set_permission.md)
 - [`ai.list_models`](../syscalls/ai/list_models.md)
 - [`ai.set_model`](../syscalls/ai/set_model.md)
+- [`ogr.get_thing`](../syscalls/ogr/get_thing.md)
+- [`ogr.list_links`](../syscalls/ogr/list_links.md)
 - [`core.get_business`](../syscalls/core/get_business.md)
 - [`core.update_business`](../syscalls/core/update_business.md)
 - [`core.list_packs`](../syscalls/core/list_packs.md)

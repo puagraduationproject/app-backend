@@ -24,7 +24,7 @@ checks the backend against it.
 `module.verb_noun`, always. The same names everywhere: a `customer_id` from CRM is
 what Marketing takes.
 
-## All system calls (161)
+## All system calls (164)
 
 ### Core (12)
 
@@ -155,6 +155,15 @@ what Marketing takes.
 | [`channels.set_auto_reply`](./channels/set_auto_reply.md) | Away, opening hours, greeting | W | `essentials` | 1 |
 | [`channels.publish_post`](./channels/publish_post.md) | Publish a Studio post to a channel | W | `studio` | 2 |
 
+### OGR (2)
+
+Part of the Kernel. It is written only by the Kernel, so it has no write system calls.
+
+| System call | Does | R/W | Pack | Term |
+|------|------|:---:|------|:----:|
+| [`ogr.get_thing`](./ogr/get_thing.md) | What one ID is: its kind, its module, its label | R | `essentials` | 1 |
+| [`ogr.list_links`](./ogr/list_links.md) | What one thing is linked to, up to 3 steps away | R | `essentials` | 1 |
+
 ### Store website (10)
 
 | System call | Does | R/W | Pack | Term |
@@ -221,7 +230,7 @@ what Marketing takes.
 | [`reports.get_home_numbers`](./reports/get_home_numbers.md) | The key numbers on Home | R | `essentials` | 1 |
 | [`reports.get_value_report`](./reports/get_value_report.md) | Money saved and earned this month, in pounds | R | `essentials` | 1 |
 
-### AI layer (11)
+### AI module (12)
 
 | System call | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
@@ -230,6 +239,7 @@ what Marketing takes.
 | [`ai.search_knowledge`](./ai/search_knowledge.md) | Searches the business's FAQs and policies | R | `essentials` | 1 |
 | [`ai.remember`](./ai/remember.md) | Saves a decision to memory, after the owner confirms | R | `essentials` | 1 |
 | [`ai.ask_approval`](./ai/ask_approval.md) | Sends an approval card and waits | R | `essentials` | 1 |
+| [`ai.ask_question`](./ai/ask_question.md) | Asks one question with a few choices on a question card, and waits | R | `essentials` | 1 |
 | [`ai.schedule`](./ai/schedule.md) | Runs a skill or a plan later, or repeatedly | R | `essentials` | 1 |
 | [`ai.save_skill`](./ai/save_skill.md) | Saves a new or edited skill, after the owner confirms | R | `essentials` | 1 |
 | [`ai.get_permissions`](./ai/get_permissions.md) | What the AI may do here: each area's setting and limit (6.6) | R | `essentials` | 1 |

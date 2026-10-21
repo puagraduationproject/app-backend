@@ -11,4 +11,5 @@ unknown card shows its plain text. One page per card.
 - [`sales`](sales.md): Sales for a period, by item, hour, staff or channel
 - [`approval`](approval.md): One action waiting: Approve, Approve and always allow this, Decline, Never let the AI do this
 - [`plan`](plan.md): A multi-step plan: the reads done, the writes to do, one approval for all
+- [`question`](question.md): One question from the AI with a few choices to tap, and a box for another answer
 - [`post`](post.md): A post preview: image, captions, channels and time

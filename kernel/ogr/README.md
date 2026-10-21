@@ -13,6 +13,8 @@ inside each business: this chat belongs to this customer, who placed order
 - The Kernel adds links when a system call or an event creates them. A chat
   with no order has no order link; when the customer orders, the link is added
 - The AI asks it through its own system calls, for example "which orders is
-  this chat connected to?"
+  this chat connected to?": [`ogr.get_thing`](../../contracts/syscalls/ogr/get_thing.md)
+  and [`ogr.list_links`](../../contracts/syscalls/ogr/list_links.md). Only the
+  Kernel writes it, so there are no write system calls
 
 Owns the links section (the `ogr` schema). Has its own tests.

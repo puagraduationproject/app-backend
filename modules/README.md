@@ -6,7 +6,7 @@ runs its code (design 2.9). Each module brings its own data section, its
 system calls, its rules, its kinds of things for the OGR, its listeners and
 jobs, its pack, and its drivers if it talks to an outside service.
 
-- [`ai`](ai/README.md): the AI module, 9 system calls
+- [`ai`](ai/README.md): the AI module, 12 system calls
 
 - [`core`](core/README.md): Core, 12 system calls
 - [`erp`](erp/README.md): ERP, 54 system calls
