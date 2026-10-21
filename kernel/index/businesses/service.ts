@@ -1,12 +1,25 @@
 import { randomUUID } from 'node:crypto';
 import { sql, type Selectable } from 'kysely';
-import type { AccountTable, BusinessTable, BusinessType, MembershipTable } from '../../../database/types.js';
+import { BUSINESS_TYPES, type AccountTable, type BusinessTable, type BusinessType, type MembershipTable, type TemplateKey } from '../../../database/types.js';
 import { audit } from '../../audit/index.js';
 import { AppError } from '../../errors/index.js';
 import { emit } from '../../outbox/index.js';
 import { inContext, type Trx } from '../../tenancy/index.js';
 
 const BUSINESSES_PER_ACCOUNT = 5;
+
+// The template each kind starts from (design 7.2). Grocery and small market
+// share one template until they need different stages, fields or skills.
+const TEMPLATES: Record<BusinessType, TemplateKey | null> = {
+  coffee_shop: 'coffee_shop',
+  small_market: 'small_market',
+  grocery: 'small_market',
+  bakery: null,
+  restaurant: null,
+  other: null,
+};
+
+export const businessTypes = () => BUSINESS_TYPES.map((key) => ({ key, ready: TEMPLATES[key] !== null }));
 
 export const HANDLE_PATTERN = /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/;
 
@@ -24,6 +37,7 @@ export type NewBusiness = {
   name: string;
   handle: string;
   business_type: BusinessType;
+  sells?: string;
   team_size: 'alone' | 'team';
   your_name?: string;
 };
@@ -33,6 +47,7 @@ export function publicBusiness(business: Business, membership: Membership) {
     name: business.name,
     handle: business.handle,
     business_type: business.business_type,
+    sells: business.sells,
     team_size: business.team_size,
     role: membership.role,
     username: membership.username,
@@ -87,6 +102,7 @@ export function listMine(accountId: string) {
 
 export async function createBusiness(account: Account, input: NewBusiness) {
   const name = input.name.trim();
+  const sells = input.sells?.trim() || null;
   const yourName = input.your_name?.trim() || account.name;
   if (!name) throw new AppError('invalid_input', 400, 'The business name is empty', { field: 'name' });
   if (!yourName) throw new AppError('invalid_input', 400, 'Your name is needed', { field: 'your_name' });
@@ -114,7 +130,8 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           name,
           handle: input.handle,
           business_type: input.business_type,
-          template_key: null,
+          template_key: TEMPLATES[input.business_type],
+          sells,
           team_size: input.team_size,
           created_by: account.id,
         })
@@ -146,6 +163,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           handle: business.handle,
           business_type: business.business_type,
           template_key: business.template_key,
+          sells: business.sells,
           team_size: business.team_size,
           owner_id: account.id,
         },

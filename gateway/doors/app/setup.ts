@@ -1,11 +1,16 @@
 import type { FastifyInstance } from 'fastify';
-import { checkHandle, createBusiness, listMine, type NewBusiness } from '../../../kernel/index/businesses/service.js';
+import { businessTypes, checkHandle, createBusiness, listMine, type NewBusiness } from '../../../kernel/index/businesses/service.js';
 import { BUSINESS_TYPES } from '../../../database/types.js';
 import { requireSession } from '../../shell/sessions.js';
 
 const handle = { type: 'string', minLength: 1, maxLength: 30 } as const;
 
 export async function setupRoutes(app: FastifyInstance) {
+  app.get('/api/app/setup', async (request) => {
+    await requireSession(request);
+    return { business_types: businessTypes() };
+  });
+
   app.get('/api/app/businesses', async (request) => {
     const { account } = await requireSession(request);
     return { businesses: await listMine(account.id) };
@@ -33,6 +38,7 @@ export async function setupRoutes(app: FastifyInstance) {
             name: { type: 'string', minLength: 1, maxLength: 80 },
             handle,
             business_type: { enum: [...BUSINESS_TYPES] },
+            sells: { type: 'string', maxLength: 120 },
             team_size: { enum: ['alone', 'team'] },
             your_name: { type: 'string', maxLength: 80 },
           },

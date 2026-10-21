@@ -45,6 +45,7 @@ describe('business setup', () => {
       name: 'Nova Café',
       handle: 'nova',
       business_type: 'coffee_shop',
+      sells: null,
       team_size: 'alone',
       role: 'owner',
       username: 'ahmed',
@@ -53,9 +54,9 @@ describe('business setup', () => {
     expect((await owner.get('/api/auth/me')).json().account.name).toBe('Ahmed Nassem');
   });
 
-  it('links no template yet, even for a café', async () => {
+  it('starts a café from its template', async () => {
     const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'nova'`.execute(admin);
-    expect(row.rows[0]!.template_key).toBeNull();
+    expect(row.rows[0]!.template_key).toBe('coffee_shop');
   });
 
   it('writes an audit row and a BusinessCreated event', async () => {
@@ -73,12 +74,36 @@ describe('business setup', () => {
     expect(response.json().error.code).toBe('handle_taken');
   });
 
-  it('takes any of the types; for now a type is only a name', async () => {
-    const response = await other.post('/api/app/businesses', { name: 'Glow', handle: 'glow', business_type: 'beauty', team_size: 'alone', your_name: 'Mona' });
-    expect(response.json().business.business_type).toBe('beauty');
+  it('lists the kinds of business, and which have a template ready', async () => {
+    expect((await owner.get('/api/app/setup')).json().business_types).toEqual([
+      { key: 'coffee_shop', ready: true },
+      { key: 'small_market', ready: true },
+      { key: 'grocery', ready: true },
+      { key: 'bakery', ready: false },
+      { key: 'restaurant', ready: false },
+      { key: 'other', ready: false },
+    ]);
+    expect((await client(app).get('/api/app/setup')).statusCode).toBe(401);
+  });
+
+  it('starts a kind with no template from the essentials only', async () => {
+    const response = await other.post('/api/app/businesses', { name: 'Glow', handle: 'glow', business_type: 'bakery', team_size: 'alone', your_name: 'Mona' });
+    expect(response.json().business.business_type).toBe('bakery');
     const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'glow'`.execute(admin);
     expect(row.rows[0]!.template_key).toBeNull();
-    expect((await other.post('/api/app/businesses', { ...nova, handle: 'x-y-z', business_type: 'spaceship' })).json().error.code).toBe('invalid_input');
+  });
+
+  it('refuses the kinds that were removed', async () => {
+    for (const kind of ['pharmacy', 'online', 'services', 'spaceship']) {
+      expect((await other.post('/api/app/businesses', { ...nova, handle: 'x-y-z', business_type: kind })).json().error.code).toBe('invalid_input');
+    }
+  });
+
+  it('keeps what a business sells, in the owner\'s words', async () => {
+    const response = await other.post('/api/app/businesses', { name: 'Mona Style', handle: 'mona-style', business_type: 'other', sells: '  Clothes for kids ', team_size: 'alone' });
+    expect(response.json().business).toMatchObject({ business_type: 'other', sells: 'Clothes for kids' });
+    const events = await sql<{ payload: { data: { sells: string; template_key: null } } }>`select payload from core.outbox where payload->'data'->>'handle' = 'mona-style'`.execute(admin);
+    expect(events.rows[0]!.payload.data).toMatchObject({ sells: 'Clothes for kids', template_key: null });
   });
 
   it('takes the username from the email when the name has no Latin letters', async () => {
@@ -88,7 +113,9 @@ describe('business setup', () => {
   });
 
   it('lists only your own businesses, with no internal IDs', async () => {
-    await other.post('/api/app/businesses', { name: 'Bean', handle: 'bean', business_type: 'small_market', team_size: 'team', your_name: 'Mona' });
+    await other.post('/api/app/businesses', { name: 'Bean', handle: 'bean', business_type: 'grocery', team_size: 'team', your_name: 'Mona' });
+    const row = await sql<{ template_key: string | null }>`select template_key from core.business where handle = 'bean'`.execute(admin);
+    expect(row.rows[0]!.template_key).toBe('small_market');
     const mine = await owner.get('/api/app/businesses');
     expect(mine.json().businesses.map((business: { handle: string }) => business.handle)).toEqual(['nova']);
     expect(mine.body).not.toMatch(UUID);
@@ -107,7 +134,7 @@ describe('the wall between businesses', () => {
     await db.transaction().execute(async (trx) => {
       await sql`select set_config('app.account_id', ${mona}, true)`.execute(trx);
       const seen = await trx.selectFrom('core.business').select('handle').execute();
-      expect(seen.map((row) => row.handle).sort()).toEqual(['bean', 'glow']);
+      expect(seen.map((row) => row.handle).sort()).toEqual(['bean', 'glow', 'mona-style']);
       expect(await trx.selectFrom('core.membership').select('username').where('business_id', '=', novaId).execute()).toEqual([]);
       expect(await trx.selectFrom('core.audit_log').selectAll().execute()).toEqual([]);
       const changed = await trx.updateTable('core.business').set({ name: 'Taken over' }).where('id', '=', novaId).executeTakeFirst();

@@ -55,11 +55,9 @@ export interface SessionTable {
   end_reason: SessionEndReason | null;
 }
 
-export const BUSINESS_TYPES = [
-  'coffee_shop', 'restaurant', 'bakery', 'small_market', 'pharmacy', 'clothing',
-  'electronics', 'beauty', 'services', 'online', 'other',
-] as const;
+export const BUSINESS_TYPES = ['coffee_shop', 'small_market', 'grocery', 'bakery', 'restaurant', 'other'] as const;
 export type BusinessType = (typeof BUSINESS_TYPES)[number];
+export type TemplateKey = 'coffee_shop' | 'small_market';
 export type Role = 'owner' | 'manager' | 'staff' | 'viewer';
 
 export interface BusinessTable {
@@ -67,7 +65,8 @@ export interface BusinessTable {
   name: string;
   handle: string;
   business_type: BusinessType;
-  template_key: 'coffee_shop' | 'small_market' | null;
+  template_key: TemplateKey | null;
+  sells: string | null;
   team_size: 'alone' | 'team';
   currency: Generated<string>;
   timezone: Generated<string>;
