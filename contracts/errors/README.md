@@ -24,5 +24,6 @@ into words in the user's language.
 | `not_logged_in` | No session, or it ended (auth) |
 | `bad_origin` | A write request came from another site (auth) |
 | `handle_taken` | Another business has this handle (setup) |
+| `business_limit` | The account already has 5 businesses; waiting does not help (setup) |
 
 More codes are added here before any system call uses them.

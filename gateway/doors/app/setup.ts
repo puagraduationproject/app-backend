@@ -41,6 +41,7 @@ export async function setupRoutes(app: FastifyInstance) {
             sells: { type: 'string', maxLength: 120 },
             team_size: { enum: ['alone', 'team'] },
             your_name: { type: 'string', maxLength: 80 },
+            idempotency_key: { type: 'string', format: 'uuid' },
           },
         },
       },

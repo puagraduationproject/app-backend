@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { sql } from 'kysely';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
@@ -120,6 +121,62 @@ describe('business setup', () => {
     expect(mine.json().businesses.map((business: { handle: string }) => business.handle)).toEqual(['nova']);
     expect(mine.body).not.toMatch(UUID);
     expect((await owner.get('/api/auth/me')).body).not.toMatch(UUID);
+  });
+});
+
+describe('retries and the limit', () => {
+  const count = async (handle: string) =>
+    Number((await sql<{ n: string }>`select count(*) as n from core.business where handle like ${handle + '%'}`.execute(admin)).rows[0]!.n);
+
+  it('a retried create gets the same business, never a second one', async () => {
+    const sara = await signUp(app, 'sara.retry@example.com', 'a good password');
+    const first = { name: 'Tree', handle: 'tree-smouha', business_type: 'coffee_shop', team_size: 'alone', your_name: 'Sara', idempotency_key: randomUUID() };
+    const made = await sara.post('/api/app/businesses', first);
+    expect(made.statusCode).toBe(201);
+
+    const again = await sara.post('/api/app/businesses', first);
+    expect(again.statusCode).toBe(201);
+    expect(again.json()).toEqual(made.json());
+
+    // The reply was lost, so they picked another handle and tried again: still the first business.
+    const renamed = await sara.post('/api/app/businesses', { ...first, handle: 'tree-smouha-2' });
+    expect(renamed.json().business.handle).toBe('tree-smouha');
+    expect(await count('tree-smouha')).toBe(1);
+
+    const otherTry = await sara.post('/api/app/businesses', { ...first, idempotency_key: randomUUID() });
+    expect(otherTry.json().error.code).toBe('handle_taken');
+  });
+
+  it('two tries at the same moment make one business', async () => {
+    const omar = await signUp(app, 'omar.race@example.com', 'a good password');
+    const body = { name: 'Race', handle: 'race-cafe', business_type: 'coffee_shop', team_size: 'alone', your_name: 'Omar', idempotency_key: randomUUID() };
+    const replies = await Promise.all([omar.post('/api/app/businesses', body), omar.post('/api/app/businesses', body)]);
+    expect(replies.map((reply) => reply.statusCode)).toEqual([201, 201]);
+    expect(replies[0]!.json()).toEqual(replies[1]!.json());
+    expect(await count('race-cafe')).toBe(1);
+  });
+
+  it('another account cannot use someone else\'s key to read their business', async () => {
+    const key = randomUUID();
+    const hany = await signUp(app, 'hany.key@example.com', 'a good password');
+    await hany.post('/api/app/businesses', { ...nova, handle: 'hany-cafe', your_name: 'Hany', idempotency_key: key });
+    const reply = await other.post('/api/app/businesses', { ...nova, handle: 'hany-cafe', your_name: 'Mona', idempotency_key: key });
+    expect(reply.json().error.code).toBe('handle_taken');
+  });
+
+  it('one account has up to 5 businesses, with its own error', async () => {
+    const busy = await signUp(app, 'busy.owner@example.com', 'a good password');
+    const keys: string[] = [];
+    for (let i = 1; i <= 5; i++) {
+      keys.push(randomUUID());
+      const reply = await busy.post('/api/app/businesses', { ...nova, handle: `busy-${i}`, your_name: 'Busy', idempotency_key: keys.at(-1) });
+      expect(reply.statusCode).toBe(201);
+    }
+    const sixth = await busy.post('/api/app/businesses', { ...nova, handle: 'busy-6', idempotency_key: randomUUID() });
+    expect(sixth.statusCode).toBe(403);
+    expect(sixth.json().error).toEqual({ code: 'business_limit' });
+    // A late retry of the fifth still gets it.
+    expect((await busy.post('/api/app/businesses', { ...nova, handle: 'busy-5', idempotency_key: keys[4] })).json().business.handle).toBe('busy-5');
   });
 });
 

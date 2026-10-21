@@ -72,6 +72,7 @@ export interface BusinessTable {
   timezone: Generated<string>;
   locale: Generated<string>;
   settings: Generated<unknown>;
+  idempotency_key: string | null;
   created_by: string;
   created_at: Generated<Date>;
 }

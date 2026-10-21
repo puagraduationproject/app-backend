@@ -40,9 +40,10 @@ export type NewBusiness = {
   sells?: string;
   team_size: 'alone' | 'team';
   your_name?: string;
+  idempotency_key?: string;
 };
 
-export function publicBusiness(business: Business, membership: Membership) {
+export function publicBusiness(business: Business, membership: Pick<Membership, 'role' | 'username' | 'display_name'>) {
   return {
     name: business.name,
     handle: business.handle,
@@ -75,29 +76,27 @@ export function checkHandle(accountId: string, handle: string) {
   return inContext({ accountId }, (trx) => handleStatus(trx, handle));
 }
 
+function myBusinesses(trx: Trx, accountId: string) {
+  return trx
+    .selectFrom('core.membership as m')
+    .innerJoin('core.business as b', 'b.id', 'm.business_id')
+    .selectAll('b')
+    .select(['m.role', 'm.username', 'm.display_name'])
+    .where('m.user_id', '=', accountId);
+}
+
 export function listMine(accountId: string) {
   return inContext({ accountId }, async (trx) => {
-    const rows = await trx
-      .selectFrom('core.membership as m')
-      .innerJoin('core.business as b', 'b.id', 'm.business_id')
-      .selectAll('b')
-      .select(['m.id as membership_id', 'm.role', 'm.username', 'm.display_name', 'm.user_id', 'm.business_id', 'm.invited_by', 'm.joined_at'])
-      .where('m.user_id', '=', accountId)
-      .orderBy('m.joined_at')
-      .execute();
-    return rows.map((row) =>
-      publicBusiness(row, {
-        id: row.membership_id,
-        business_id: row.business_id,
-        user_id: row.user_id,
-        username: row.username,
-        display_name: row.display_name,
-        role: row.role,
-        invited_by: row.invited_by,
-        joined_at: row.joined_at,
-      }),
-    );
+    const rows = await myBusinesses(trx, accountId).orderBy('m.joined_at').execute();
+    return rows.map((row) => publicBusiness(row, row));
   });
+}
+
+// The business an earlier try of the same request made, if there was one.
+async function madeEarlier(trx: Trx, accountId: string, key: string | undefined) {
+  if (!key) return null;
+  const row = await myBusinesses(trx, accountId).where('b.created_by', '=', accountId).where('b.idempotency_key', '=', key).executeTakeFirst();
+  return row ? publicBusiness(row, row) : null;
 }
 
 export async function createBusiness(account: Account, input: NewBusiness) {
@@ -110,14 +109,17 @@ export async function createBusiness(account: Account, input: NewBusiness) {
   const businessId = randomUUID();
   try {
     return await inContext({ accountId: account.id, businessId }, async (trx) => {
-      const status = await handleStatus(trx, input.handle);
-      if (status === 'taken') throw new AppError('handle_taken', 409, 'This handle is taken', { field: 'handle' });
-      if (status !== 'available') throw new AppError('invalid_input', 400, `Handle is ${status}`, { field: 'handle' });
+      const earlier = await madeEarlier(trx, account.id, input.idempotency_key);
+      if (earlier) return earlier;
 
       const { rows } = await sql<{ count: string }>`select count(*) from core.my_business_ids()`.execute(trx);
       if (Number(rows[0]!.count) >= BUSINESSES_PER_ACCOUNT) {
-        throw new AppError('limit_reached', 429, 'Too many businesses for one account');
+        throw new AppError('business_limit', 403, 'One account can have up to 5 businesses');
       }
+
+      const status = await handleStatus(trx, input.handle);
+      if (status === 'taken') throw new AppError('handle_taken', 409, 'This handle is taken', { field: 'handle' });
+      if (status !== 'available') throw new AppError('invalid_input', 400, `Handle is ${status}`, { field: 'handle' });
 
       if (!account.name) {
         await trx.updateTable('core.account').set({ name: yourName, updated_at: new Date() }).where('id', '=', account.id).execute();
@@ -133,6 +135,7 @@ export async function createBusiness(account: Account, input: NewBusiness) {
           template_key: TEMPLATES[input.business_type],
           sells,
           team_size: input.team_size,
+          idempotency_key: input.idempotency_key ?? null,
           created_by: account.id,
         })
         .returningAll()
@@ -172,6 +175,9 @@ export async function createBusiness(account: Account, input: NewBusiness) {
     });
   } catch (error) {
     if ((error as { code?: string }).code === '23505') {
+      // Two tries of the same request at once: the other one has committed by now.
+      const earlier = await inContext({ accountId: account.id }, (trx) => madeEarlier(trx, account.id, input.idempotency_key));
+      if (earlier) return earlier;
       throw new AppError('handle_taken', 409, 'This handle is taken', { field: 'handle' });
     }
     throw error;

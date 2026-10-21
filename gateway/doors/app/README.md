@@ -14,11 +14,19 @@ Same system calls as every other door; same permissions and audit.
 | `GET /api/app/setup` | (logged in) | `business_types`: `{ key, ready }` in the order to show them; `ready` is true when the kind starts from a template |
 | `GET /api/app/businesses` | (logged in) | `businesses`: the person's businesses |
 | `GET /api/app/handles/:handle` | (logged in) | `handle`, `available`, `reason`: `invalid`, `reserved`, `taken` or null |
-| `POST /api/app/businesses` | `name`, `handle`, `business_type` (`coffee_shop`, `small_market`, `grocery`, `bakery`, `restaurant`, `other`), `sells` (optional, up to 120 characters: what they sell, asked after "Something else"), `team_size` (`alone`, `team`), `your_name` (needed when the account has no name) | `201`, `business` |
+| `POST /api/app/businesses` | `name`, `handle`, `business_type` (`coffee_shop`, `small_market`, `grocery`, `bakery`, `restaurant`, `other`), `sells` (optional, up to 120 characters: what they sell, asked after "Something else"), `team_size` (`alone`, `team`), `your_name` (needed when the account has no name), `idempotency_key` (a uuid, one per setup; see below) | `201`, `business` |
 
 A business is shown as `{ name, handle, business_type, sells, team_size, role, username, display_name }`,
 never with its internal ID; the handle names it. Errors: `not_logged_in`,
-`invalid_input` (`field`), `handle_taken`, `limit_reached` (5 businesses per account).
+`invalid_input` (`field`), `handle_taken`, `business_limit` (the account already
+has 5 businesses; 403).
+
+**Retries (design 2.1).** The app makes one `idempotency_key` when setup starts
+and sends it with every try. When a try with the same key already made a
+business for this account, the answer is that business (`201`, the same body),
+even if the handle or other fields changed since: the reply was lost, not the
+business. Two tries at the same moment also make one business. Without a key,
+every try is a new business.
 
 ## Kinds of business and their templates
 
