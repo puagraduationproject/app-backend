@@ -3,15 +3,15 @@
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 7.3. When the design changes, this page changes with it.
 
 Every business gets the [essentials](essentials.md). Everything else is a pack
-the owner turns on or off. A pack is the capability: a tool's pack field names it.
+the owner turns on or off. A pack is the capability: a system call's pack field names it.
 
 ## How a pack works
 
 1. Each pack is one file in the contracts: its key, its module, what it needs,
-   its tools, its windows and sections, its skills, its event listeners, its
+   its system calls, its windows and sections, its skills, its event listeners, its
    settings, and a setup skill
-2. **One switch for everything.** The pack is the capability: a tool's
-   capability field names its pack. When a pack is off, its tools do not exist
+2. **One switch for everything.** The pack is the capability: a system call's
+   capability field names its pack. When a pack is off, its system calls do not exist
    for that business, its windows and sidebar items hide, its skills are not
    offered, and its listeners do nothing
 3. **Events still flow.** ERP always emits `OrderCompleted`; if `loyalty` is off,

@@ -1,3 +1,3 @@
 # Tests: undo
 
-Every write tool's undo puts things back.
+Every write system call's undo puts things back.

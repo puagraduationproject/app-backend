@@ -10,7 +10,7 @@
 | Term | 1 |
 | On by default in | Coffee shop |
 
-## Tools
+## System calls
 
 - To list
 

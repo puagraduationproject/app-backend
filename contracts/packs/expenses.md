@@ -10,10 +10,10 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.record_expense`](../tools/erp/record_expense.md)
-- [`erp.list_expenses`](../tools/erp/list_expenses.md)
+- [`erp.record_expense`](../syscalls/erp/record_expense.md)
+- [`erp.list_expenses`](../syscalls/erp/list_expenses.md)
 
 ## Windows and sidebar items
 

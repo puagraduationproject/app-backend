@@ -9,7 +9,7 @@ code; each business can change their permissions.
 
 | Window | Owner | Manager | Staff | Viewer |
 |--------|:-----:|:-------:|:-----:|:------:|
-| Home: AI chat | all tools | most tools | sales, stock and how-to only | read-only answers |
+| Home: AI chat | all system calls | most system calls | sales, stock and how-to only | read-only answers |
 | Sales screen, Orders | yes | yes | yes | view |
 | Menu and stock | yes | yes | stock and waste only | view |
 | Customers, Inbox | yes | yes | Inbox only | view |

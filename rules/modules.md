@@ -6,7 +6,11 @@
 
 | Data | Owner |
 |------|-------|
-| Businesses, members, roles, locations, templates, packs on per business, audit, notifications | Core |
+| Accounts, sessions, sign-in codes | Shell (2.9) |
+| Businesses, members, roles, locations, templates, packs on per business, AI permission settings | Index (2.9) |
+| Things and the links between them | OGR (2.9) |
+| Audit log, outbox, approvals, jobs | Kernel and Daemons (2.9) |
+| Business profile, notifications | Core |
 | Items, recipes, stock, sales, orders, payments, shifts, suppliers, purchases, credit, expenses | ERP |
 | Customers, identities, timeline, loyalty, support cases, bookings, segments, consent | CRM |
 | Channel accounts, conversations, messages, auto-replies | Channels |
@@ -15,13 +19,14 @@
 | Offers, campaigns | Marketing |
 | Staff profiles, rota, attendance, tasks | Team |
 | Summary numbers | Reports |
-| Skills, plans, approvals, AI permission settings, memory, threads, knowledge, AI action log | AI layer (its own data only; business data only through tools) |
+| Skills, plans, memory, threads, knowledge, AI action log | AI module (its own data only; business data only through system calls) |
 
 ## One database, one schema per module
 
 | Schema | Module |
 |--------|--------|
-| `core` | Core |
+| `core` | Core, and for now the Shell, the Index, the audit log and the outbox |
+| `ogr` | OGR |
 | `erp` | ERP |
 | `crm` | CRM |
 | `channels` | Channels |
@@ -30,14 +35,16 @@
 | `marketing` | Marketing |
 | `team` | Team |
 | `reports` | Reports |
-| `ai` | AI layer |
+| `ai` | AI module |
 
-Each module connects with its own database user, which has rights only on its
-own schema. The AI layer's user cannot see any business schema.
+Only the Kernel opens the database (design 2.9). For each system call it
+switches to the owning module's database user, which has rights only on that
+module's schema, so a module's code can never touch another module's tables.
+The AI module's user cannot see any business schema.
 
 ## One thing, one ID, everywhere
 
-Each module builds its own part with its own tools. What holds them together is
+Each module builds its own part with its own system calls. What holds them together is
 that every shared thing has **one owner and one ID**, and every other module
 stores only that ID.
 
@@ -91,7 +98,7 @@ flowchart LR
 
 ## The context every call and event carries
 
-Every tool call, service call and event carries the same context:
+Every system call call, service call and event carries the same context:
 
 | Field | Why |
 |-------|-----|
@@ -108,7 +115,7 @@ it), the IDs it is about (`customer_id`, `order_id`, ...), and its data.
 ## How a process crosses modules
 
 No module reaches into another. A process that crosses modules is a chain of
-tool calls and events, each step done by the module that owns it:
+system calls and events, each step done by the module that owns it:
 
 | Process | The chain |
 |---------|-----------|

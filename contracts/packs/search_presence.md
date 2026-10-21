@@ -10,13 +10,13 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`store.get_search_presence`](../tools/store/get_search_presence.md)
-- [`store.update_descriptions`](../tools/store/update_descriptions.md)
-- [`store.sync_listing`](../tools/store/sync_listing.md)
-- [`store.list_reviews`](../tools/store/list_reviews.md)
-- [`store.reply_review`](../tools/store/reply_review.md)
+- [`store.get_search_presence`](../syscalls/store/get_search_presence.md)
+- [`store.update_descriptions`](../syscalls/store/update_descriptions.md)
+- [`store.sync_listing`](../syscalls/store/sync_listing.md)
+- [`store.list_reviews`](../syscalls/store/list_reviews.md)
+- [`store.reply_review`](../syscalls/store/reply_review.md)
 
 ## Windows and sidebar items
 

@@ -10,9 +10,9 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`erp.transfer_stock`](../tools/erp/transfer_stock.md)
+- [`erp.transfer_stock`](../syscalls/erp/transfer_stock.md)
 
 ## Windows and sidebar items
 

@@ -1,3 +1,3 @@
 # Tests: pages
 
-Each tool behaves exactly as its reference page says.
+Each system call behaves exactly as its reference page says.

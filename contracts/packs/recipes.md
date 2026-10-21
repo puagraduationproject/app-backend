@@ -10,15 +10,15 @@
 | Term | 1 |
 | On by default in | Coffee shop |
 
-## Tools
+## System calls
 
-- [`erp.list_ingredients`](../tools/erp/list_ingredients.md)
-- [`erp.create_ingredient`](../tools/erp/create_ingredient.md)
-- [`erp.update_ingredient`](../tools/erp/update_ingredient.md)
-- [`erp.get_recipe`](../tools/erp/get_recipe.md)
-- [`erp.set_recipe`](../tools/erp/set_recipe.md)
-- [`erp.get_item_cost`](../tools/erp/get_item_cost.md)
-- [`erp.suggest_price`](../tools/erp/suggest_price.md)
+- [`erp.list_ingredients`](../syscalls/erp/list_ingredients.md)
+- [`erp.create_ingredient`](../syscalls/erp/create_ingredient.md)
+- [`erp.update_ingredient`](../syscalls/erp/update_ingredient.md)
+- [`erp.get_recipe`](../syscalls/erp/get_recipe.md)
+- [`erp.set_recipe`](../syscalls/erp/set_recipe.md)
+- [`erp.get_item_cost`](../syscalls/erp/get_item_cost.md)
+- [`erp.suggest_price`](../syscalls/erp/suggest_price.md)
 
 ## Windows and sidebar items
 

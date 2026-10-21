@@ -10,9 +10,9 @@
 | Term | 1 |
 | On by default in | Coffee shop |
 
-## Tools
+## System calls
 
-- [`erp.manage_modifiers`](../tools/erp/manage_modifiers.md)
+- [`erp.manage_modifiers`](../syscalls/erp/manage_modifiers.md)
 
 ## Windows and sidebar items
 

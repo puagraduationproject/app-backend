@@ -1,6 +1,6 @@
 # Error codes
 
-Tools return error codes, never message text. The frontend and the AI turn a code
+System calls return error codes, never message text. The frontend and the AI turn a code
 into words in the user's language.
 
 | Code | Meaning |
@@ -25,4 +25,4 @@ into words in the user's language.
 | `bad_origin` | A write request came from another site (auth) |
 | `handle_taken` | Another business has this handle (setup) |
 
-More codes are added here before any tool uses them.
+More codes are added here before any system call uses them.

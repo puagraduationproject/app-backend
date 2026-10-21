@@ -10,7 +10,7 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
 - To list
 

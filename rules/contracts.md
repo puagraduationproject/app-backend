@@ -2,11 +2,11 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 4.4. When the design changes, this page changes with it.
 
-The tool reference is what everyone builds on: the frontend, the AI team, the
+The system call reference is what everyone builds on: the frontend, the AI team, the
 training data, and in term 2 developers outside the team. Anyone must be able to
-use a tool from its page alone, without reading the backend's code or asking.
+use a system call from its page alone, without reading the backend's code or asking.
 
-**Each tool's page has:**
+**Each system call's page has:**
 
 | Part | What it says |
 |------|--------------|
@@ -22,9 +22,9 @@ use a tool from its page alone, without reading the backend's code or asking.
 **The backend's promise:**
 
 1. The page and the code never differ. The page is written first, the backend
-   builds to it, and an automatic test checks every tool against its page
-2. A published tool never changes in a way that breaks a caller. Adding is
-   allowed: a new optional input, a new output field, a new tool
+   builds to it, and an automatic test checks every system call against its page
+2. A published system call never changes in a way that breaks a caller. Adding is
+   allowed: a new optional input, a new output field, a new system call
 3. A breaking change (renaming an input, removing a field, changing what a call
    does) is a **new version**. The old version keeps working for at least one
    term and is marked as old on its page

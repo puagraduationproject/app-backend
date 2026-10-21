@@ -10,12 +10,12 @@
 | Term | 1 |
 | On by default in | Coffee shop |
 
-## Tools
+## System calls
 
-- [`crm.get_loyalty`](../tools/crm/get_loyalty.md)
-- [`crm.add_points`](../tools/crm/add_points.md)
-- [`crm.redeem_reward`](../tools/crm/redeem_reward.md)
-- [`crm.update_loyalty_rules`](../tools/crm/update_loyalty_rules.md)
+- [`crm.get_loyalty`](../syscalls/crm/get_loyalty.md)
+- [`crm.add_points`](../syscalls/crm/add_points.md)
+- [`crm.redeem_reward`](../syscalls/crm/redeem_reward.md)
+- [`crm.update_loyalty_rules`](../syscalls/crm/update_loyalty_rules.md)
 
 ## Windows and sidebar items
 

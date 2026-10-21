@@ -4,7 +4,7 @@
 
 Operations: what the business sells and what happens to it.
 
-Its tools are its only public face. It never writes another module's tables;
+Its system calls are its only public face. It never writes another module's tables;
 it emits events and reads other modules through their services.
 
 ## Areas
@@ -21,18 +21,18 @@ it emits events and reads other modules through their services.
 | [`purchasing`](purchasing/README.md) | Suppliers, purchase orders, receiving |
 | [`credit`](credit/README.md) | Customer debts and limits |
 | [`expenses`](expenses/README.md) | Expenses |
-| [`adapters`](adapters/README.md) | Payments and couriers (term 2) |
+| [`drivers`](drivers/README.md) | Payments and couriers (term 2) |
 
 Every area folder holds the same parts. File names and extensions follow the
 stack once it is chosen:
 
 | Part | Holds |
 |------|-------|
-| `tools` | One handler per tool page; checks inputs, calls the service, returns the output |
+| `syscalls` | One handler per system call page; checks inputs, calls the service, returns the output |
 | `service` | The area's rules; the only code that changes its data |
 | `data` | Access to the area's own tables, in the module's own schema |
 | `listeners` | Handlers for events from other modules |
-| `tests` | The area's own tests: every tool, every rule |
+| `tests` | The area's own tests: every system call, every rule |
 
 ## Data (schema `erp`)
 
@@ -87,61 +87,61 @@ expense         id, business_id, category, amount_cents, date, note, receipt_url
 - **Emits:** CashGapFound, CostChanged, DebtDue, OrderCancelled, OrderCompleted, OrderCreated, OrderReady, PaymentReceived, PriceChanged, PurchaseReceived, RefundIssued, StockExpiring, StockLow, WasteLogged
 - **Listens to:** CustomerForgotten, CustomerMerged
 
-## Tools (54)
+## System calls (54)
 
-| Tool | Does | R/W | Pack | Term |
+| System call | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
-| [`erp.search_items`](../../contracts/tools/erp/search_items.md) | Search the menu by name, category, available now | R | `essentials` | 1 |
-| [`erp.get_item`](../../contracts/tools/erp/get_item.md) | Item with sizes, options, price, photo, and its cost if the role allows | R | `essentials` | 1 |
-| [`erp.list_categories`](../../contracts/tools/erp/list_categories.md) | Menu sections | R | `essentials` | 1 |
-| [`erp.create_item`](../../contracts/tools/erp/create_item.md) | New item with sizes and options | W | `essentials` | 1 |
-| [`erp.update_item`](../../contracts/tools/erp/update_item.md) | Name, description, photo, category, template fields | W | `essentials` | 1 |
-| [`erp.change_price`](../../contracts/tools/erp/change_price.md) | New price | W | `essentials` | 1 |
-| [`erp.set_availability`](../../contracts/tools/erp/set_availability.md) | Sold out today, back in stock | W | `essentials` | 1 |
-| [`erp.manage_modifiers`](../../contracts/tools/erp/manage_modifiers.md) | Option groups: milk type, extra shot, sugar | W | `options` | 1 |
-| [`erp.archive_item`](../../contracts/tools/erp/archive_item.md) | Hide an item (undo: restore) | W | `essentials` | 1 |
-| [`erp.list_ingredients`](../../contracts/tools/erp/list_ingredients.md) | Ingredients with unit and cost | R | `recipes` | 1 |
-| [`erp.create_ingredient`](../../contracts/tools/erp/create_ingredient.md) | New ingredient | W | `recipes` | 1 |
-| [`erp.update_ingredient`](../../contracts/tools/erp/update_ingredient.md) | Unit, cost, supplier | W | `recipes` | 1 |
-| [`erp.get_recipe`](../../contracts/tools/erp/get_recipe.md) | What one sale uses | R | `recipes` | 1 |
-| [`erp.set_recipe`](../../contracts/tools/erp/set_recipe.md) | Recipe lines for an item or size | W | `recipes` | 1 |
-| [`erp.get_item_cost`](../../contracts/tools/erp/get_item_cost.md) | Cost now, margin, change since last month | R | `recipes` | 1 |
-| [`erp.suggest_price`](../../contracts/tools/erp/suggest_price.md) | Price for a target margin | R | `recipes` | 1 |
-| [`erp.get_stock_levels`](../../contracts/tools/erp/get_stock_levels.md) | Levels; filter low, expiring, by branch | R | `stock` | 1 |
-| [`erp.get_stock_history`](../../contracts/tools/erp/get_stock_history.md) | Movements for one ingredient or product | R | `stock` | 1 |
-| [`erp.forecast_stock`](../../contracts/tools/erp/forecast_stock.md) | When it runs out, at the current pace | R | `stock` | 1 |
-| [`erp.log_waste`](../../contracts/tools/erp/log_waste.md) | Waste with a reason | W | `stock` | 1 |
-| [`erp.adjust_stock`](../../contracts/tools/erp/adjust_stock.md) | Count correction | W | `stock` | 1 |
-| [`erp.record_stock_in`](../../contracts/tools/erp/record_stock_in.md) | Stock bought without a purchase order | W | `stock` | 1 |
-| [`erp.transfer_stock`](../../contracts/tools/erp/transfer_stock.md) | Between branches | W | `branches` | 2 |
-| [`erp.create_order`](../../contracts/tools/erp/create_order.md) | Pickup, delivery or dine-in order | W | `orders` | 1 |
-| [`erp.record_counter_sale`](../../contracts/tools/erp/record_counter_sale.md) | Sale created and paid in one step | W | `sales_screen` | 1 |
-| [`erp.get_order`](../../contracts/tools/erp/get_order.md) | One order by number, with lines, status, payment | R | `orders` | 1 |
-| [`erp.list_orders`](../../contracts/tools/erp/list_orders.md) | Open, today, by channel, by customer | R | `orders` | 1 |
-| [`erp.update_order_status`](../../contracts/tools/erp/update_order_status.md) | Move to the next stage | W | `orders` | 1 |
-| [`erp.edit_order`](../../contracts/tools/erp/edit_order.md) | Add or remove lines before preparing | W | `orders` | 1 |
-| [`erp.cancel_order`](../../contracts/tools/erp/cancel_order.md) | Cancel; releases stock | W | `orders` | 1 |
-| [`erp.apply_discount`](../../contracts/tools/erp/apply_discount.md) | Discount on an order | W | `orders` | 1 |
-| [`erp.record_payment`](../../contracts/tools/erp/record_payment.md) | Cash, card, wallet, on account | W | `orders` | 1 |
-| [`erp.list_payments`](../../contracts/tools/erp/list_payments.md) | By period, method, shift | R | `orders` | 1 |
-| [`erp.refund_payment`](../../contracts/tools/erp/refund_payment.md) | Full or partial refund | W | `orders` | 1 |
-| [`erp.get_shift`](../../contracts/tools/erp/get_shift.md) | The open shift: expected cash so far | R | `shifts_cash` | 1 |
-| [`erp.list_shifts`](../../contracts/tools/erp/list_shifts.md) | Past shifts with gaps | R | `shifts_cash` | 1 |
-| [`erp.record_cash_movement`](../../contracts/tools/erp/record_cash_movement.md) | Cash in or out of the drawer | W | `shifts_cash` | 1 |
-| [`erp.list_suppliers`](../../contracts/tools/erp/list_suppliers.md) | Suppliers and what they supply | R | `purchasing` | 1 |
-| [`erp.get_supplier`](../../contracts/tools/erp/get_supplier.md) | Prices, history, delivery days | R | `purchasing` | 1 |
-| [`erp.create_supplier`](../../contracts/tools/erp/create_supplier.md) | New supplier | W | `purchasing` | 1 |
-| [`erp.update_supplier`](../../contracts/tools/erp/update_supplier.md) | Contact, items, prices | W | `purchasing` | 1 |
-| [`erp.compare_supplier_prices`](../../contracts/tools/erp/compare_supplier_prices.md) | Same ingredient across suppliers | R | `purchasing` | 1 |
-| [`erp.draft_purchase_order`](../../contracts/tools/erp/draft_purchase_order.md) | Draft from low stock or by request | W | `purchasing` | 1 |
-| [`erp.update_purchase_order`](../../contracts/tools/erp/update_purchase_order.md) | Lines, quantities | W | `purchasing` | 1 |
-| [`erp.send_purchase_order`](../../contracts/tools/erp/send_purchase_order.md) | Send to the supplier | W | `purchasing` | 1 |
-| [`erp.receive_purchase`](../../contracts/tools/erp/receive_purchase.md) | Full or partial delivery, actual costs | W | `purchasing` | 1 |
-| [`erp.cancel_purchase_order`](../../contracts/tools/erp/cancel_purchase_order.md) | Cancel | W | `purchasing` | 1 |
-| [`erp.get_credit_account`](../../contracts/tools/erp/get_credit_account.md) | Balance, limit, history | R | `credit` | 1 |
-| [`erp.list_debts`](../../contracts/tools/erp/list_debts.md) | Due and overdue | R | `credit` | 1 |
-| [`erp.charge_on_account`](../../contracts/tools/erp/charge_on_account.md) | Sale on credit | W | `credit` | 1 |
-| [`erp.record_debt_payment`](../../contracts/tools/erp/record_debt_payment.md) | Payment against a debt | W | `credit` | 1 |
-| [`erp.set_credit_limit`](../../contracts/tools/erp/set_credit_limit.md) | Change a customer's limit | W | `credit` | 1 |
-| [`erp.record_expense`](../../contracts/tools/erp/record_expense.md) | Rent, salaries, bills, with a receipt photo | W | `expenses` | 1 |
-| [`erp.list_expenses`](../../contracts/tools/erp/list_expenses.md) | By period and category | R | `expenses` | 1 |
+| [`erp.search_items`](../../contracts/syscalls/erp/search_items.md) | Search the menu by name, category, available now | R | `essentials` | 1 |
+| [`erp.get_item`](../../contracts/syscalls/erp/get_item.md) | Item with sizes, options, price, photo, and its cost if the role allows | R | `essentials` | 1 |
+| [`erp.list_categories`](../../contracts/syscalls/erp/list_categories.md) | Menu sections | R | `essentials` | 1 |
+| [`erp.create_item`](../../contracts/syscalls/erp/create_item.md) | New item with sizes and options | W | `essentials` | 1 |
+| [`erp.update_item`](../../contracts/syscalls/erp/update_item.md) | Name, description, photo, category, template fields | W | `essentials` | 1 |
+| [`erp.change_price`](../../contracts/syscalls/erp/change_price.md) | New price | W | `essentials` | 1 |
+| [`erp.set_availability`](../../contracts/syscalls/erp/set_availability.md) | Sold out today, back in stock | W | `essentials` | 1 |
+| [`erp.manage_modifiers`](../../contracts/syscalls/erp/manage_modifiers.md) | Option groups: milk type, extra shot, sugar | W | `options` | 1 |
+| [`erp.archive_item`](../../contracts/syscalls/erp/archive_item.md) | Hide an item (undo: restore) | W | `essentials` | 1 |
+| [`erp.list_ingredients`](../../contracts/syscalls/erp/list_ingredients.md) | Ingredients with unit and cost | R | `recipes` | 1 |
+| [`erp.create_ingredient`](../../contracts/syscalls/erp/create_ingredient.md) | New ingredient | W | `recipes` | 1 |
+| [`erp.update_ingredient`](../../contracts/syscalls/erp/update_ingredient.md) | Unit, cost, supplier | W | `recipes` | 1 |
+| [`erp.get_recipe`](../../contracts/syscalls/erp/get_recipe.md) | What one sale uses | R | `recipes` | 1 |
+| [`erp.set_recipe`](../../contracts/syscalls/erp/set_recipe.md) | Recipe lines for an item or size | W | `recipes` | 1 |
+| [`erp.get_item_cost`](../../contracts/syscalls/erp/get_item_cost.md) | Cost now, margin, change since last month | R | `recipes` | 1 |
+| [`erp.suggest_price`](../../contracts/syscalls/erp/suggest_price.md) | Price for a target margin | R | `recipes` | 1 |
+| [`erp.get_stock_levels`](../../contracts/syscalls/erp/get_stock_levels.md) | Levels; filter low, expiring, by branch | R | `stock` | 1 |
+| [`erp.get_stock_history`](../../contracts/syscalls/erp/get_stock_history.md) | Movements for one ingredient or product | R | `stock` | 1 |
+| [`erp.forecast_stock`](../../contracts/syscalls/erp/forecast_stock.md) | When it runs out, at the current pace | R | `stock` | 1 |
+| [`erp.log_waste`](../../contracts/syscalls/erp/log_waste.md) | Waste with a reason | W | `stock` | 1 |
+| [`erp.adjust_stock`](../../contracts/syscalls/erp/adjust_stock.md) | Count correction | W | `stock` | 1 |
+| [`erp.record_stock_in`](../../contracts/syscalls/erp/record_stock_in.md) | Stock bought without a purchase order | W | `stock` | 1 |
+| [`erp.transfer_stock`](../../contracts/syscalls/erp/transfer_stock.md) | Between branches | W | `branches` | 2 |
+| [`erp.create_order`](../../contracts/syscalls/erp/create_order.md) | Pickup, delivery or dine-in order | W | `orders` | 1 |
+| [`erp.record_counter_sale`](../../contracts/syscalls/erp/record_counter_sale.md) | Sale created and paid in one step | W | `sales_screen` | 1 |
+| [`erp.get_order`](../../contracts/syscalls/erp/get_order.md) | One order by number, with lines, status, payment | R | `orders` | 1 |
+| [`erp.list_orders`](../../contracts/syscalls/erp/list_orders.md) | Open, today, by channel, by customer | R | `orders` | 1 |
+| [`erp.update_order_status`](../../contracts/syscalls/erp/update_order_status.md) | Move to the next stage | W | `orders` | 1 |
+| [`erp.edit_order`](../../contracts/syscalls/erp/edit_order.md) | Add or remove lines before preparing | W | `orders` | 1 |
+| [`erp.cancel_order`](../../contracts/syscalls/erp/cancel_order.md) | Cancel; releases stock | W | `orders` | 1 |
+| [`erp.apply_discount`](../../contracts/syscalls/erp/apply_discount.md) | Discount on an order | W | `orders` | 1 |
+| [`erp.record_payment`](../../contracts/syscalls/erp/record_payment.md) | Cash, card, wallet, on account | W | `orders` | 1 |
+| [`erp.list_payments`](../../contracts/syscalls/erp/list_payments.md) | By period, method, shift | R | `orders` | 1 |
+| [`erp.refund_payment`](../../contracts/syscalls/erp/refund_payment.md) | Full or partial refund | W | `orders` | 1 |
+| [`erp.get_shift`](../../contracts/syscalls/erp/get_shift.md) | The open shift: expected cash so far | R | `shifts_cash` | 1 |
+| [`erp.list_shifts`](../../contracts/syscalls/erp/list_shifts.md) | Past shifts with gaps | R | `shifts_cash` | 1 |
+| [`erp.record_cash_movement`](../../contracts/syscalls/erp/record_cash_movement.md) | Cash in or out of the drawer | W | `shifts_cash` | 1 |
+| [`erp.list_suppliers`](../../contracts/syscalls/erp/list_suppliers.md) | Suppliers and what they supply | R | `purchasing` | 1 |
+| [`erp.get_supplier`](../../contracts/syscalls/erp/get_supplier.md) | Prices, history, delivery days | R | `purchasing` | 1 |
+| [`erp.create_supplier`](../../contracts/syscalls/erp/create_supplier.md) | New supplier | W | `purchasing` | 1 |
+| [`erp.update_supplier`](../../contracts/syscalls/erp/update_supplier.md) | Contact, items, prices | W | `purchasing` | 1 |
+| [`erp.compare_supplier_prices`](../../contracts/syscalls/erp/compare_supplier_prices.md) | Same ingredient across suppliers | R | `purchasing` | 1 |
+| [`erp.draft_purchase_order`](../../contracts/syscalls/erp/draft_purchase_order.md) | Draft from low stock or by request | W | `purchasing` | 1 |
+| [`erp.update_purchase_order`](../../contracts/syscalls/erp/update_purchase_order.md) | Lines, quantities | W | `purchasing` | 1 |
+| [`erp.send_purchase_order`](../../contracts/syscalls/erp/send_purchase_order.md) | Send to the supplier | W | `purchasing` | 1 |
+| [`erp.receive_purchase`](../../contracts/syscalls/erp/receive_purchase.md) | Full or partial delivery, actual costs | W | `purchasing` | 1 |
+| [`erp.cancel_purchase_order`](../../contracts/syscalls/erp/cancel_purchase_order.md) | Cancel | W | `purchasing` | 1 |
+| [`erp.get_credit_account`](../../contracts/syscalls/erp/get_credit_account.md) | Balance, limit, history | R | `credit` | 1 |
+| [`erp.list_debts`](../../contracts/syscalls/erp/list_debts.md) | Due and overdue | R | `credit` | 1 |
+| [`erp.charge_on_account`](../../contracts/syscalls/erp/charge_on_account.md) | Sale on credit | W | `credit` | 1 |
+| [`erp.record_debt_payment`](../../contracts/syscalls/erp/record_debt_payment.md) | Payment against a debt | W | `credit` | 1 |
+| [`erp.set_credit_limit`](../../contracts/syscalls/erp/set_credit_limit.md) | Change a customer's limit | W | `credit` | 1 |
+| [`erp.record_expense`](../../contracts/syscalls/erp/record_expense.md) | Rent, salaries, bills, with a receipt photo | W | `expenses` | 1 |
+| [`erp.list_expenses`](../../contracts/syscalls/erp/list_expenses.md) | By period and category | R | `expenses` | 1 |

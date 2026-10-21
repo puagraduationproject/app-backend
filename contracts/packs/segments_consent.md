@@ -10,12 +10,12 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`crm.create_segment`](../tools/crm/create_segment.md)
-- [`crm.list_segment_members`](../tools/crm/list_segment_members.md)
-- [`crm.get_consent`](../tools/crm/get_consent.md)
-- [`crm.record_consent`](../tools/crm/record_consent.md)
+- [`crm.create_segment`](../syscalls/crm/create_segment.md)
+- [`crm.list_segment_members`](../syscalls/crm/list_segment_members.md)
+- [`crm.get_consent`](../syscalls/crm/get_consent.md)
+- [`crm.record_consent`](../syscalls/crm/record_consent.md)
 
 ## Windows and sidebar items
 

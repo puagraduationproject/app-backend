@@ -10,13 +10,13 @@
 | Term | 1 basic, 2 full |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`store.get_site`](../tools/store/get_site.md)
-- [`store.update_page`](../tools/store/update_page.md)
-- [`store.set_banner`](../tools/store/set_banner.md)
-- [`store.set_menu_display`](../tools/store/set_menu_display.md)
-- [`store.update_theme`](../tools/store/update_theme.md)
+- [`store.get_site`](../syscalls/store/get_site.md)
+- [`store.update_page`](../syscalls/store/update_page.md)
+- [`store.set_banner`](../syscalls/store/set_banner.md)
+- [`store.set_menu_display`](../syscalls/store/set_menu_display.md)
+- [`store.update_theme`](../syscalls/store/update_theme.md)
 
 ## Windows and sidebar items
 

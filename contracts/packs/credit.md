@@ -10,13 +10,13 @@
 | Term | 1 basic, 2 full |
 | On by default in | Small market |
 
-## Tools
+## System calls
 
-- [`erp.get_credit_account`](../tools/erp/get_credit_account.md)
-- [`erp.list_debts`](../tools/erp/list_debts.md)
-- [`erp.charge_on_account`](../tools/erp/charge_on_account.md)
-- [`erp.record_debt_payment`](../tools/erp/record_debt_payment.md)
-- [`erp.set_credit_limit`](../tools/erp/set_credit_limit.md)
+- [`erp.get_credit_account`](../syscalls/erp/get_credit_account.md)
+- [`erp.list_debts`](../syscalls/erp/list_debts.md)
+- [`erp.charge_on_account`](../syscalls/erp/charge_on_account.md)
+- [`erp.record_debt_payment`](../syscalls/erp/record_debt_payment.md)
+- [`erp.set_credit_limit`](../syscalls/erp/set_credit_limit.md)
 
 ## Windows and sidebar items
 

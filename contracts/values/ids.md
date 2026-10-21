@@ -2,7 +2,7 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 2.4. When the design changes, this page changes with it.
 
-Each module builds its own part with its own tools. What holds them together is
+Each module builds its own part with its own system calls. What holds them together is
 that every shared thing has **one owner and one ID**, and every other module
 stores only that ID.
 

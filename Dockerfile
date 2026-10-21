@@ -3,10 +3,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY tsconfig.json ./
-COPY api ./api
+COPY gateway ./gateway
+COPY kernel ./kernel
+COPY daemons ./daemons
 COPY config ./config
 COPY database ./database
-COPY platform ./platform
 COPY modules ./modules
 RUN npm run build
 
@@ -18,4 +19,4 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 USER node
 EXPOSE 11001
-CMD ["node", "dist/api/server.js"]
+CMD ["node", "dist/gateway/server.js"]

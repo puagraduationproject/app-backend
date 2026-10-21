@@ -10,11 +10,11 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.get_shift`](../tools/erp/get_shift.md)
-- [`erp.list_shifts`](../tools/erp/list_shifts.md)
-- [`erp.record_cash_movement`](../tools/erp/record_cash_movement.md)
+- [`erp.get_shift`](../syscalls/erp/get_shift.md)
+- [`erp.list_shifts`](../syscalls/erp/list_shifts.md)
+- [`erp.record_cash_movement`](../syscalls/erp/record_cash_movement.md)
 
 ## Windows and sidebar items
 

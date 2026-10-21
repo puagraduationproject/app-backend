@@ -2,7 +2,8 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 7.1. When the design changes, this page changes with it.
 
-Only the `core` module's database user has rights here. One migration per
+Holds the Shell's users section, the Index's where section, and the Kernel's
+audit log and outbox, for now (design 2.9). One migration per
 change, never edited after it runs. Every business table has `business_id` and
 row-level security.
 

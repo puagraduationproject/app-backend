@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/api/server.js",
+    "start": "node dist/gateway/server.js",
     "test": "vitest run"
   },
   "dependencies": {

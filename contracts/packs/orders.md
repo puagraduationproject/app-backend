@@ -10,18 +10,18 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.create_order`](../tools/erp/create_order.md)
-- [`erp.get_order`](../tools/erp/get_order.md)
-- [`erp.list_orders`](../tools/erp/list_orders.md)
-- [`erp.update_order_status`](../tools/erp/update_order_status.md)
-- [`erp.edit_order`](../tools/erp/edit_order.md)
-- [`erp.cancel_order`](../tools/erp/cancel_order.md)
-- [`erp.apply_discount`](../tools/erp/apply_discount.md)
-- [`erp.record_payment`](../tools/erp/record_payment.md)
-- [`erp.list_payments`](../tools/erp/list_payments.md)
-- [`erp.refund_payment`](../tools/erp/refund_payment.md)
+- [`erp.create_order`](../syscalls/erp/create_order.md)
+- [`erp.get_order`](../syscalls/erp/get_order.md)
+- [`erp.list_orders`](../syscalls/erp/list_orders.md)
+- [`erp.update_order_status`](../syscalls/erp/update_order_status.md)
+- [`erp.edit_order`](../syscalls/erp/edit_order.md)
+- [`erp.cancel_order`](../syscalls/erp/cancel_order.md)
+- [`erp.apply_discount`](../syscalls/erp/apply_discount.md)
+- [`erp.record_payment`](../syscalls/erp/record_payment.md)
+- [`erp.list_payments`](../syscalls/erp/list_payments.md)
+- [`erp.refund_payment`](../syscalls/erp/refund_payment.md)
 
 ## Windows and sidebar items
 

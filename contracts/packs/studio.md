@@ -10,19 +10,19 @@
 | Term | 2 (brand kit 1 if time) |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`channels.publish_post`](../tools/channels/publish_post.md)
-- [`studio.get_brand_kit`](../tools/studio/get_brand_kit.md)
-- [`studio.update_brand_kit`](../tools/studio/update_brand_kit.md)
-- [`studio.list_templates`](../tools/studio/list_templates.md)
-- [`studio.render_design`](../tools/studio/render_design.md)
-- [`studio.generate_image`](../tools/studio/generate_image.md)
-- [`studio.save_design`](../tools/studio/save_design.md)
-- [`studio.list_designs`](../tools/studio/list_designs.md)
-- [`studio.create_post`](../tools/studio/create_post.md)
-- [`studio.schedule_post`](../tools/studio/schedule_post.md)
-- [`studio.list_posts`](../tools/studio/list_posts.md)
+- [`channels.publish_post`](../syscalls/channels/publish_post.md)
+- [`studio.get_brand_kit`](../syscalls/studio/get_brand_kit.md)
+- [`studio.update_brand_kit`](../syscalls/studio/update_brand_kit.md)
+- [`studio.list_templates`](../syscalls/studio/list_templates.md)
+- [`studio.render_design`](../syscalls/studio/render_design.md)
+- [`studio.generate_image`](../syscalls/studio/generate_image.md)
+- [`studio.save_design`](../syscalls/studio/save_design.md)
+- [`studio.list_designs`](../syscalls/studio/list_designs.md)
+- [`studio.create_post`](../syscalls/studio/create_post.md)
+- [`studio.schedule_post`](../syscalls/studio/schedule_post.md)
+- [`studio.list_posts`](../syscalls/studio/list_posts.md)
 
 ## Windows and sidebar items
 

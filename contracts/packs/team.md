@@ -10,18 +10,18 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`team.list_staff`](../tools/team/list_staff.md)
-- [`team.get_rota`](../tools/team/get_rota.md)
-- [`team.set_rota`](../tools/team/set_rota.md)
-- [`team.swap_shift`](../tools/team/swap_shift.md)
-- [`team.record_attendance`](../tools/team/record_attendance.md)
-- [`team.list_attendance`](../tools/team/list_attendance.md)
-- [`team.create_task`](../tools/team/create_task.md)
-- [`team.list_tasks`](../tools/team/list_tasks.md)
-- [`team.complete_task`](../tools/team/complete_task.md)
-- [`team.get_staff_performance`](../tools/team/get_staff_performance.md)
+- [`team.list_staff`](../syscalls/team/list_staff.md)
+- [`team.get_rota`](../syscalls/team/get_rota.md)
+- [`team.set_rota`](../syscalls/team/set_rota.md)
+- [`team.swap_shift`](../syscalls/team/swap_shift.md)
+- [`team.record_attendance`](../syscalls/team/record_attendance.md)
+- [`team.list_attendance`](../syscalls/team/list_attendance.md)
+- [`team.create_task`](../syscalls/team/create_task.md)
+- [`team.list_tasks`](../syscalls/team/list_tasks.md)
+- [`team.complete_task`](../syscalls/team/complete_task.md)
+- [`team.get_staff_performance`](../syscalls/team/get_staff_performance.md)
 
 ## Windows and sidebar items
 

@@ -4,7 +4,7 @@
 
 Offers and campaigns, measured in pounds (term 2).
 
-Its tools are its only public face. It never writes another module's tables;
+Its system calls are its only public face. It never writes another module's tables;
 it emits events and reads other modules through their services.
 
 Every area folder holds the same parts. File names and extensions follow the
@@ -12,11 +12,11 @@ stack once it is chosen:
 
 | Part | Holds |
 |------|-------|
-| `tools` | One handler per tool page; checks inputs, calls the service, returns the output |
+| `syscalls` | One handler per system call page; checks inputs, calls the service, returns the output |
 | `service` | The area's rules; the only code that changes its data |
 | `data` | Access to the area's own tables, in the module's own schema |
 | `listeners` | Handlers for events from other modules |
-| `tests` | The area's own tests: every tool, every rule |
+| `tests` | The area's own tests: every system call, every rule |
 
 ## Data (schema `marketing`)
 
@@ -32,13 +32,13 @@ campaign_send    id, campaign_id, customer_id, channel, status, sent_at
 - **Emits:** CampaignSent, OfferStarted
 - **Listens to:** CustomerForgotten, CustomerMerged, OrderCompleted
 
-## Tools (6)
+## System calls (6)
 
-| Tool | Does | R/W | Pack | Term |
+| System call | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
-| [`marketing.list_offers`](../../contracts/tools/marketing/list_offers.md) | Current and past offers | R | `marketing` | 2 |
-| [`marketing.create_offer`](../../contracts/tools/marketing/create_offer.md) | Discount or bundle with dates and hours | W | `marketing` | 2 |
-| [`marketing.end_offer`](../../contracts/tools/marketing/end_offer.md) | End early | W | `marketing` | 2 |
-| [`marketing.create_campaign`](../../contracts/tools/marketing/create_campaign.md) | Draft: segment, offer, message, channels | W | `marketing` | 2 |
-| [`marketing.send_campaign`](../../contracts/tools/marketing/send_campaign.md) | Send to the segment, consent checked | W | `marketing` | 2 |
-| [`marketing.get_campaign_results`](../../contracts/tools/marketing/get_campaign_results.md) | Reach, orders, money earned | R | `marketing` | 2 |
+| [`marketing.list_offers`](../../contracts/syscalls/marketing/list_offers.md) | Current and past offers | R | `marketing` | 2 |
+| [`marketing.create_offer`](../../contracts/syscalls/marketing/create_offer.md) | Discount or bundle with dates and hours | W | `marketing` | 2 |
+| [`marketing.end_offer`](../../contracts/syscalls/marketing/end_offer.md) | End early | W | `marketing` | 2 |
+| [`marketing.create_campaign`](../../contracts/syscalls/marketing/create_campaign.md) | Draft: segment, offer, message, channels | W | `marketing` | 2 |
+| [`marketing.send_campaign`](../../contracts/syscalls/marketing/send_campaign.md) | Send to the segment, consent checked | W | `marketing` | 2 |
+| [`marketing.get_campaign_results`](../../contracts/syscalls/marketing/get_campaign_results.md) | Reach, orders, money earned | R | `marketing` | 2 |

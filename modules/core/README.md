@@ -2,9 +2,15 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 7. When the design changes, this page changes with it.
 
-The foundation every module stands on.
+The business's profile, notifications, and the `core.*` system calls.
 
-Its tools are its only public face. It never writes another module's tables;
+Section 7's Core is split by role (design 2.9): sign-up and log-in are the
+[Shell](../../gateway/shell/README.md); businesses, members, roles, locations
+and packs are the [Index](../../kernel/index/README.md); audit and outbox
+are the [Kernel](../../kernel/README.md). Their tables all stay in the `core`
+schema for now.
+
+Its system calls are its only public face. It never writes another module's tables;
 it emits events and reads other modules through their services.
 
 Every area folder holds the same parts. File names and extensions follow the
@@ -12,11 +18,11 @@ stack once it is chosen:
 
 | Part | Holds |
 |------|-------|
-| `tools` | One handler per tool page; checks inputs, calls the service, returns the output |
+| `syscalls` | One handler per system call page; checks inputs, calls the service, returns the output |
 | `service` | The area's rules; the only code that changes its data |
 | `data` | Access to the area's own tables, in the module's own schema |
 | `listeners` | Handlers for events from other modules |
-| `tests` | The area's own tests: every tool, every rule |
+| `tests` | The area's own tests: every system call, every rule |
 
 ## Data (schema `core`)
 
@@ -24,7 +30,7 @@ stack once it is chosen:
 business          id, name, handle (unique), business_type, currency,
                   timezone, locale, template_key, team_size(alone|team),
                   settings(jsonb), created_by, created_at
-account           (platform/auth: account, email_code, auth_ticket, session)
+account           (gateway/shell: account, email_code, auth_ticket, session)
 membership        id, business_id, user_id, username, display_name, role,
                   invited_by, joined_at
                   UNIQUE (business_id, user_id), UNIQUE (business_id, username)
@@ -50,19 +56,19 @@ api_key           id, business_id, name, scopes, created_at   (term 2)
 - **Emits:** BusinessCreated, MemberInvited, MemberJoined, PackTurnedOff, PackTurnedOn, RoleChanged
 - **Listens to:** none
 
-## Tools (12)
+## System calls (12)
 
-| Tool | Does | R/W | Pack | Term |
+| System call | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
-| [`core.get_business`](../../contracts/tools/core/get_business.md) | Profile, hours, location, delivery areas | R | `essentials` | 1 |
-| [`core.update_business`](../../contracts/tools/core/update_business.md) | Hours, settings, profile | W | `essentials` | 1 |
-| [`core.list_packs`](../../contracts/tools/core/list_packs.md) | Packs on, packs in the library, what each needs | R | `essentials` | 1 |
-| [`core.turn_on_pack`](../../contracts/tools/core/turn_on_pack.md) | Turn a pack on, with the packs it needs (undo: turn off) | W | `essentials` | 1 |
-| [`core.turn_off_pack`](../../contracts/tools/core/turn_off_pack.md) | Turn a pack off; its data is kept (undo: turn on) | W | `essentials` | 1 |
-| [`core.list_members`](../../contracts/tools/core/list_members.md) | Members and roles | R | `essentials` | 1 |
-| [`core.invite_member`](../../contracts/tools/core/invite_member.md) | Invite by phone or email with a role | W | `essentials` | 1 |
-| [`core.change_role`](../../contracts/tools/core/change_role.md) | Change a member's role | W | `essentials` | 1 |
-| [`core.remove_member`](../../contracts/tools/core/remove_member.md) | Remove a member | W | `essentials` | 1 |
-| [`core.list_locations`](../../contracts/tools/core/list_locations.md) | Branches | R | `essentials` | 1 |
-| [`core.get_audit_log`](../../contracts/tools/core/get_audit_log.md) | Who changed what | R | `essentials` | 1 |
-| [`core.notify`](../../contracts/tools/core/notify.md) | Notification to a member | W | `essentials` | 1 |
+| [`core.get_business`](../../contracts/syscalls/core/get_business.md) | Profile, hours, location, delivery areas | R | `essentials` | 1 |
+| [`core.update_business`](../../contracts/syscalls/core/update_business.md) | Hours, settings, profile | W | `essentials` | 1 |
+| [`core.list_packs`](../../contracts/syscalls/core/list_packs.md) | Packs on, packs in the library, what each needs | R | `essentials` | 1 |
+| [`core.turn_on_pack`](../../contracts/syscalls/core/turn_on_pack.md) | Turn a pack on, with the packs it needs (undo: turn off) | W | `essentials` | 1 |
+| [`core.turn_off_pack`](../../contracts/syscalls/core/turn_off_pack.md) | Turn a pack off; its data is kept (undo: turn on) | W | `essentials` | 1 |
+| [`core.list_members`](../../contracts/syscalls/core/list_members.md) | Members and roles | R | `essentials` | 1 |
+| [`core.invite_member`](../../contracts/syscalls/core/invite_member.md) | Invite by phone or email with a role | W | `essentials` | 1 |
+| [`core.change_role`](../../contracts/syscalls/core/change_role.md) | Change a member's role | W | `essentials` | 1 |
+| [`core.remove_member`](../../contracts/syscalls/core/remove_member.md) | Remove a member | W | `essentials` | 1 |
+| [`core.list_locations`](../../contracts/syscalls/core/list_locations.md) | Branches | R | `essentials` | 1 |
+| [`core.get_audit_log`](../../contracts/syscalls/core/get_audit_log.md) | Who changed what | R | `essentials` | 1 |
+| [`core.notify`](../../contracts/syscalls/core/notify.md) | Notification to a member | W | `essentials` | 1 |

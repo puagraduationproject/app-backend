@@ -10,15 +10,15 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`crm.open_case`](../tools/crm/open_case.md)
-- [`crm.get_case`](../tools/crm/get_case.md)
-- [`crm.list_cases`](../tools/crm/list_cases.md)
-- [`crm.update_case`](../tools/crm/update_case.md)
-- [`crm.add_case_note`](../tools/crm/add_case_note.md)
-- [`crm.issue_voucher`](../tools/crm/issue_voucher.md)
-- [`crm.resolve_case`](../tools/crm/resolve_case.md)
+- [`crm.open_case`](../syscalls/crm/open_case.md)
+- [`crm.get_case`](../syscalls/crm/get_case.md)
+- [`crm.list_cases`](../syscalls/crm/list_cases.md)
+- [`crm.update_case`](../syscalls/crm/update_case.md)
+- [`crm.add_case_note`](../syscalls/crm/add_case_note.md)
+- [`crm.issue_voucher`](../syscalls/crm/issue_voucher.md)
+- [`crm.resolve_case`](../syscalls/crm/resolve_case.md)
 
 ## Windows and sidebar items
 

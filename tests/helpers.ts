@@ -9,9 +9,9 @@ process.env.MAIL_MODE = 'log';
 process.env.PUBLIC_URL ??= 'http://localhost';
 process.env.AUTH_SECRET ??= 'test-secret';
 
-const { buildServer } = await import('../api/server.js');
+const { buildServer } = await import('../gateway/server.js');
 export const { db } = await import('../database/client.js');
-export const { sentInLogMode } = await import('../platform/auth/mail.js');
+export const { sentInLogMode } = await import('../gateway/shell/mail.js');
 export const SESSION_COOKIE = '__Host-gp_session';
 
 export const CHROME_WINDOWS =

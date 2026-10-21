@@ -10,14 +10,14 @@
 | Term | 2 |
 | On by default in | none by default |
 
-## Tools
+## System calls
 
-- [`marketing.list_offers`](../tools/marketing/list_offers.md)
-- [`marketing.create_offer`](../tools/marketing/create_offer.md)
-- [`marketing.end_offer`](../tools/marketing/end_offer.md)
-- [`marketing.create_campaign`](../tools/marketing/create_campaign.md)
-- [`marketing.send_campaign`](../tools/marketing/send_campaign.md)
-- [`marketing.get_campaign_results`](../tools/marketing/get_campaign_results.md)
+- [`marketing.list_offers`](../syscalls/marketing/list_offers.md)
+- [`marketing.create_offer`](../syscalls/marketing/create_offer.md)
+- [`marketing.end_offer`](../syscalls/marketing/end_offer.md)
+- [`marketing.create_campaign`](../syscalls/marketing/create_campaign.md)
+- [`marketing.send_campaign`](../syscalls/marketing/send_campaign.md)
+- [`marketing.get_campaign_results`](../syscalls/marketing/get_campaign_results.md)
 
 ## Windows and sidebar items
 

@@ -10,9 +10,9 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.record_counter_sale`](../tools/erp/record_counter_sale.md)
+- [`erp.record_counter_sale`](../syscalls/erp/record_counter_sale.md)
 
 ## Windows and sidebar items
 

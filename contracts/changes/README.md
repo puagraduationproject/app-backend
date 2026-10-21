@@ -1,8 +1,9 @@
 # Changes
 
-Every change to a tool, an event, a card, a pack or a value, newest first.
+Every change to a system call, an event, a card, a pack or a value, newest first.
 Written and announced to all subteams **before** the change is merged.
 
 | Date | What changed | Why | Breaking? | Old version kept until |
 |------|--------------|-----|:---------:|------------------------|
+| 2026-10-21 | Tools are now **system calls**: `contracts/tools/` is `contracts/syscalls/`, and `ai.find_tools` is `ai.find_syscalls`. Adapters are now **drivers** | The design calls the backend an operating system for a business (2.9) | no: every page is still a draft, version 0, and nothing calls them yet | |
 | 2026-10-19 | First draft of all pages from the design | Start | no | |

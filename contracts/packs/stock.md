@@ -10,14 +10,14 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.get_stock_levels`](../tools/erp/get_stock_levels.md)
-- [`erp.get_stock_history`](../tools/erp/get_stock_history.md)
-- [`erp.forecast_stock`](../tools/erp/forecast_stock.md)
-- [`erp.log_waste`](../tools/erp/log_waste.md)
-- [`erp.adjust_stock`](../tools/erp/adjust_stock.md)
-- [`erp.record_stock_in`](../tools/erp/record_stock_in.md)
+- [`erp.get_stock_levels`](../syscalls/erp/get_stock_levels.md)
+- [`erp.get_stock_history`](../syscalls/erp/get_stock_history.md)
+- [`erp.forecast_stock`](../syscalls/erp/forecast_stock.md)
+- [`erp.log_waste`](../syscalls/erp/log_waste.md)
+- [`erp.adjust_stock`](../syscalls/erp/adjust_stock.md)
+- [`erp.record_stock_in`](../syscalls/erp/record_stock_in.md)
 
 ## Windows and sidebar items
 

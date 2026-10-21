@@ -5,25 +5,25 @@
 The business's look and its content (term 2, the brand kit starts in term 1 if
 time allows).
 
-Its tools are its only public face. It never writes another module's tables;
+Its system calls are its only public face. It never writes another module's tables;
 it emits events and reads other modules through their services.
 
 ## Areas
 
 | Folder | Holds |
 |--------|-------|
-| [`adapters`](adapters/README.md) | The open image model (term 2) |
+| [`drivers`](drivers/README.md) | The open image model (term 2) |
 
 Every area folder holds the same parts. File names and extensions follow the
 stack once it is chosen:
 
 | Part | Holds |
 |------|-------|
-| `tools` | One handler per tool page; checks inputs, calls the service, returns the output |
+| `syscalls` | One handler per system call page; checks inputs, calls the service, returns the output |
 | `service` | The area's rules; the only code that changes its data |
 | `data` | Access to the area's own tables, in the module's own schema |
 | `listeners` | Handlers for events from other modules |
-| `tests` | The area's own tests: every tool, every rule |
+| `tests` | The area's own tests: every system call, every rule |
 
 ## Data (schema `studio`)
 
@@ -42,17 +42,17 @@ post             id, business_id, design_id, caption_ar, caption_en, channels,
 - **Emits:** PostScheduled
 - **Listens to:** none
 
-## Tools (10)
+## System calls (10)
 
-| Tool | Does | R/W | Pack | Term |
+| System call | Does | R/W | Pack | Term |
 |------|------|:---:|------|:----:|
-| [`studio.get_brand_kit`](../../contracts/tools/studio/get_brand_kit.md) | Colours, fonts, logo, voice | R | `studio` | 2 (1 if time allows) |
-| [`studio.update_brand_kit`](../../contracts/tools/studio/update_brand_kit.md) | Change the brand kit | W | `studio` | 2 (1 if time allows) |
-| [`studio.list_templates`](../../contracts/tools/studio/list_templates.md) | Templates by kind and season | R | `studio` | 2 |
-| [`studio.render_design`](../../contracts/tools/studio/render_design.md) | Template + data -> image or PDF preview | W | `studio` | 2 |
-| [`studio.generate_image`](../../contracts/tools/studio/generate_image.md) | Background or product shot from the open image model | W | `studio` | 2 |
-| [`studio.save_design`](../../contracts/tools/studio/save_design.md) | Keep a design | W | `studio` | 2 |
-| [`studio.list_designs`](../../contracts/tools/studio/list_designs.md) | Saved designs | R | `studio` | 2 |
-| [`studio.create_post`](../../contracts/tools/studio/create_post.md) | Draft: design + captions in Arabic and English | W | `studio` | 2 |
-| [`studio.schedule_post`](../../contracts/tools/studio/schedule_post.md) | Time and channels | W | `studio` | 2 |
-| [`studio.list_posts`](../../contracts/tools/studio/list_posts.md) | Drafts, scheduled, published, with results | R | `studio` | 2 |
+| [`studio.get_brand_kit`](../../contracts/syscalls/studio/get_brand_kit.md) | Colours, fonts, logo, voice | R | `studio` | 2 (1 if time allows) |
+| [`studio.update_brand_kit`](../../contracts/syscalls/studio/update_brand_kit.md) | Change the brand kit | W | `studio` | 2 (1 if time allows) |
+| [`studio.list_templates`](../../contracts/syscalls/studio/list_templates.md) | Templates by kind and season | R | `studio` | 2 |
+| [`studio.render_design`](../../contracts/syscalls/studio/render_design.md) | Template + data -> image or PDF preview | W | `studio` | 2 |
+| [`studio.generate_image`](../../contracts/syscalls/studio/generate_image.md) | Background or product shot from the open image model | W | `studio` | 2 |
+| [`studio.save_design`](../../contracts/syscalls/studio/save_design.md) | Keep a design | W | `studio` | 2 |
+| [`studio.list_designs`](../../contracts/syscalls/studio/list_designs.md) | Saved designs | R | `studio` | 2 |
+| [`studio.create_post`](../../contracts/syscalls/studio/create_post.md) | Draft: design + captions in Arabic and English | W | `studio` | 2 |
+| [`studio.schedule_post`](../../contracts/syscalls/studio/schedule_post.md) | Time and channels | W | `studio` | 2 |
+| [`studio.list_posts`](../../contracts/syscalls/studio/list_posts.md) | Drafts, scheduled, published, with results | R | `studio` | 2 |

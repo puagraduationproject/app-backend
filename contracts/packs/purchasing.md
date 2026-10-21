@@ -10,18 +10,18 @@
 | Term | 1 |
 | On by default in | Coffee shop, Small market |
 
-## Tools
+## System calls
 
-- [`erp.list_suppliers`](../tools/erp/list_suppliers.md)
-- [`erp.get_supplier`](../tools/erp/get_supplier.md)
-- [`erp.create_supplier`](../tools/erp/create_supplier.md)
-- [`erp.update_supplier`](../tools/erp/update_supplier.md)
-- [`erp.compare_supplier_prices`](../tools/erp/compare_supplier_prices.md)
-- [`erp.draft_purchase_order`](../tools/erp/draft_purchase_order.md)
-- [`erp.update_purchase_order`](../tools/erp/update_purchase_order.md)
-- [`erp.send_purchase_order`](../tools/erp/send_purchase_order.md)
-- [`erp.receive_purchase`](../tools/erp/receive_purchase.md)
-- [`erp.cancel_purchase_order`](../tools/erp/cancel_purchase_order.md)
+- [`erp.list_suppliers`](../syscalls/erp/list_suppliers.md)
+- [`erp.get_supplier`](../syscalls/erp/get_supplier.md)
+- [`erp.create_supplier`](../syscalls/erp/create_supplier.md)
+- [`erp.update_supplier`](../syscalls/erp/update_supplier.md)
+- [`erp.compare_supplier_prices`](../syscalls/erp/compare_supplier_prices.md)
+- [`erp.draft_purchase_order`](../syscalls/erp/draft_purchase_order.md)
+- [`erp.update_purchase_order`](../syscalls/erp/update_purchase_order.md)
+- [`erp.send_purchase_order`](../syscalls/erp/send_purchase_order.md)
+- [`erp.receive_purchase`](../syscalls/erp/receive_purchase.md)
+- [`erp.cancel_purchase_order`](../syscalls/erp/cancel_purchase_order.md)
 
 ## Windows and sidebar items
 

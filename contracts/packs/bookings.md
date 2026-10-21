@@ -10,13 +10,13 @@
 | Term | 1 basic, 2 full |
 | On by default in | Coffee shop |
 
-## Tools
+## System calls
 
-- [`crm.check_availability`](../tools/crm/check_availability.md)
-- [`crm.create_booking`](../tools/crm/create_booking.md)
-- [`crm.update_booking`](../tools/crm/update_booking.md)
-- [`crm.cancel_booking`](../tools/crm/cancel_booking.md)
-- [`crm.list_bookings`](../tools/crm/list_bookings.md)
+- [`crm.check_availability`](../syscalls/crm/check_availability.md)
+- [`crm.create_booking`](../syscalls/crm/create_booking.md)
+- [`crm.update_booking`](../syscalls/crm/update_booking.md)
+- [`crm.cancel_booking`](../syscalls/crm/cancel_booking.md)
+- [`crm.list_bookings`](../syscalls/crm/list_bookings.md)
 
 ## Windows and sidebar items
 

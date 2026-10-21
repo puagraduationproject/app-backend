@@ -7,7 +7,7 @@ Written once here, used by the backend, `app-web`, `app-ai-agent` and
 
 | Folder | Holds |
 |--------|-------|
-| [tools/](tools/README.md) | One reference page per tool |
+| [syscalls/](syscalls/README.md) | One reference page per system call |
 | [packs/](packs/README.md) | The essentials and every pack |
 | [events/](events/README.md) | The envelope and one page per event |
 | [cards/](cards/README.md) | The cards the windows and the AI show |
@@ -20,9 +20,9 @@ Written once here, used by the backend, `app-web`, `app-ai-agent` and
 ## The backend's promise
 
 1. The page and the code never differ. The page is written first, the backend
-   builds to it, and an automatic test checks every tool against its page
-2. A published tool never changes in a way that breaks a caller. Adding is
-   allowed: a new optional input, a new output field, a new tool
+   builds to it, and an automatic test checks every system call against its page
+2. A published system call never changes in a way that breaks a caller. Adding is
+   allowed: a new optional input, a new output field, a new system call
 3. A breaking change (renaming an input, removing a field, changing what a call
    does) is a **new version**. The old version keeps working for at least one
    term and is marked as old on its page

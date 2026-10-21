@@ -2,7 +2,7 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 6.6. When the design changes, this page changes with it.
 
-The owner decides what the AI may do, per area or per tool, with one of three
+The owner decides what the AI may do, per area or per system call, with one of three
 settings:
 
 | Setting | What happens |
@@ -41,7 +41,7 @@ Rules that no setting changes:
 - A customer confirms their own order; that is the customer's approval, not the
   owner's, and it never covers anything else
 - The customer face has no settings to change: it only ever has its own
-  limited tools
+  limited system calls
 - Actions that cannot be fully undone (a message sent, a post seen, money paid)
   start at ask first
 
