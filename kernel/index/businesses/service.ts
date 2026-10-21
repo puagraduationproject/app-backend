@@ -174,12 +174,12 @@ export async function createBusiness(account: Account, input: NewBusiness) {
       return shown;
     });
   } catch (error) {
-    if ((error as { code?: string }).code === '23505') {
-      // Two tries of the same request at once: the other one has committed by now.
-      const earlier = await inContext({ accountId: account.id }, (trx) => madeEarlier(trx, account.id, input.idempotency_key));
-      if (earlier) return earlier;
-      throw new AppError('handle_taken', 409, 'This handle is taken', { field: 'handle' });
-    }
-    throw error;
+    const unique = (error as { code?: string }).code === '23505';
+    const conflict = error instanceof AppError && (error.code === 'handle_taken' || error.code === 'business_limit');
+    if (!unique && !conflict) throw error;
+    // Two tries of the same request at once: the one that won has committed by now.
+    const earlier = await inContext({ accountId: account.id }, (trx) => madeEarlier(trx, account.id, input.idempotency_key));
+    if (earlier) return earlier;
+    throw unique ? new AppError('handle_taken', 409, 'This handle is taken', { field: 'handle' }) : error;
   }
 }
