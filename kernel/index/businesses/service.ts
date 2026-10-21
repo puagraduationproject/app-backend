@@ -5,6 +5,8 @@ import { audit } from '../../audit/index.js';
 import { AppError } from '../../errors/index.js';
 import { emit } from '../../outbox/index.js';
 import { inContext, type Trx } from '../../tenancy/index.js';
+import { HANDLE_PATTERN, suggestHandle, usernameFrom } from './names.js';
+import { RESERVED } from './reserved.js';
 
 const BUSINESSES_PER_ACCOUNT = 5;
 
@@ -20,14 +22,6 @@ const TEMPLATES: Record<BusinessType, TemplateKey | null> = {
 };
 
 export const businessTypes = () => BUSINESS_TYPES.map((key) => ({ key, ready: TEMPLATES[key] !== null }));
-
-export const HANDLE_PATTERN = /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/;
-
-const RESERVED = new Set([
-  'about', 'account', 'admin', 'api', 'app', 'assets', 'auth', 'billing', 'blog', 'dashboard', 'docs', 'help',
-  'home', 'login', 'logout', 'mail', 'new', 'owner', 'pricing', 'privacy', 'root', 'settings', 'setup', 'shop',
-  'signup', 'static', 'status', 'store', 'support', 'system', 'team', 'terms', 'test', 'webhooks', 'www',
-]);
 
 type Account = Selectable<AccountTable>;
 type Business = Selectable<BusinessTable>;
@@ -56,15 +50,6 @@ export function publicBusiness(business: Business, membership: Pick<Membership, 
   };
 }
 
-export function usernameFrom(name: string | null, email: string): string {
-  const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9._-]/g, '').slice(0, 30).replace(/^[._-]+|[._-]+$/g, '');
-  const fromName = clean((name ?? '').trim().split(/\s+/)[0] ?? '');
-  if (fromName.length >= 2) return fromName;
-  const fromEmail = clean(email.split('@')[0]!.split('+')[0]!);
-  return fromEmail.length >= 2 ? fromEmail : 'me';
-}
-
-
 export async function handleStatus(trx: Trx, handle: string): Promise<'available' | 'invalid' | 'reserved' | 'taken'> {
   if (!HANDLE_PATTERN.test(handle) || handle.includes('--')) return 'invalid';
   if (RESERVED.has(handle)) return 'reserved';
@@ -74,6 +59,15 @@ export async function handleStatus(trx: Trx, handle: string): Promise<'available
 
 export function checkHandle(accountId: string, handle: string) {
   return inContext({ accountId }, (trx) => handleStatus(trx, handle));
+}
+
+// The names a new business would get from what was typed so far: its handle,
+// and the person's username in it (username@handle).
+export function suggestNames(account: Account, name: string, yourName?: string) {
+  return inContext({ accountId: account.id }, async (trx) => {
+    const handle = suggestHandle(name);
+    return { handle, status: await handleStatus(trx, handle), username: usernameFrom(yourName?.trim() || account.name, account.email) };
+  });
 }
 
 function myBusinesses(trx: Trx, accountId: string) {

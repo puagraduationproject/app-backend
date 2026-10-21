@@ -9,7 +9,8 @@ Owns the where section: businesses, members, roles, locations, templates, the
 packs on for each business, and the AI settings. Today its tables are in the
 `core` schema.
 
-- `businesses`: creating a business and its owner's membership (design 7.7)
+- `businesses`: creating a business and its owner's membership, its handle and the owner's
+  username, Arabic names in Latin letters, and the reserved handles (design 7.7)
 - [`packs`](packs/README.md): essentials and the packs on for this business; needs, turning on and off (design 7.3)
 
 The `core.*` system calls (members, roles, packs, locations) work on this data.

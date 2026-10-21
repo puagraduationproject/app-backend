@@ -34,6 +34,22 @@ describe('business setup', () => {
     expect((await owner.get('/api/app/handles/ab')).json().reason).toBe('invalid');
   });
 
+  it('keeps brands and the paths we will need', async () => {
+    for (const handle of ['starbucks', 'seoudi', 'menu', 'checkout', 'invite', 'official']) {
+      expect((await owner.get(`/api/app/handles/${handle}`)).json().reason, handle).toBe('reserved');
+    }
+  });
+
+  it('suggests a handle from the business name, and the username that goes with it', async () => {
+    const arabic = await owner.get(`/api/app/names?name=${encodeURIComponent('كافيه النيل')}&your_name=Moe`);
+    expect(arabic.json()).toEqual({ handle: 'kafeh-elnil', available: true, reason: null, username: 'moe' });
+    expect((await owner.get('/api/app/names?name=Starbucks')).json()).toMatchObject({ handle: 'starbucks', available: false, reason: 'reserved' });
+    // No name yet on the account: the username comes from the email.
+    expect((await owner.get('/api/app/names?name=Nova')).json().username).toBe('ahmed.owner');
+    expect((await owner.get('/api/app/names')).statusCode).toBe(400);
+    expect((await client(app).get('/api/app/names?name=Nova')).statusCode).toBe(401);
+  });
+
   it('asks for your name when the account has none', async () => {
     const response = await owner.post('/api/app/businesses', nova);
     expect(response.json().error).toEqual({ code: 'invalid_input', field: 'your_name' });
@@ -70,6 +86,7 @@ describe('business setup', () => {
 
   it('refuses a handle that is taken', async () => {
     expect((await other.get('/api/app/handles/nova')).json().reason).toBe('taken');
+    expect((await other.get('/api/app/names?name=Nova')).json()).toMatchObject({ handle: 'nova', available: false, reason: 'taken' });
     const response = await other.post('/api/app/businesses', { ...nova, name: 'Another Nova', your_name: 'Mona' });
     expect(response.statusCode).toBe(409);
     expect(response.json().error.code).toBe('handle_taken');

@@ -14,6 +14,7 @@ Same system calls as every other door; same permissions and audit.
 | `GET /api/app/setup` | (logged in) | `business_types`: `{ key, ready }` in the order to show them; `ready` is true when the kind starts from a template |
 | `GET /api/app/businesses` | (logged in) | `businesses`: the person's businesses |
 | `GET /api/app/handles/:handle` | (logged in) | `handle`, `available`, `reason`: `invalid`, `reserved`, `taken` or null |
+| `GET /api/app/names?name=&your_name=` | (logged in) `name`: the business name typed so far; `your_name` (optional): the person's name, when the account has none yet | `handle` (suggested from the name), `available`, `reason` (as above), `username` (the person's username in the new business, so the app can show `username@handle`) |
 | `POST /api/app/businesses` | `name`, `handle`, `business_type` (`coffee_shop`, `small_market`, `grocery`, `bakery`, `restaurant`, `other`), `sells` (optional, up to 120 characters: what they sell, asked after "Something else"), `team_size` (`alone`, `team`), `your_name` (needed when the account has no name), `idempotency_key` (a uuid, one per setup; see below) | `201`, `business` |
 
 A business is shown as `{ name, handle, business_type, sells, team_size, role, username, display_name }`,
@@ -48,3 +49,34 @@ with what they picked kept in `sells`.
 Creating a business writes the business, the owner's membership
 (`username@handle`: the username is the first name in Latin letters, or the email before the `@` when there is none), an audit row and the `BusinessCreated` event, in one
 transaction.
+
+## Handles
+
+**From the name.** `GET /api/app/names` makes the handle from the business
+name, in one place (`kernel/index/businesses/names.ts`) so the app, the AI and
+imports all get the same answer. Arabic is written in Latin letters the way
+Egyptians write names in chats (`كافيه النيل` gives `kafeh-elnil`); Latin
+letters lose their accents (`Nova Café` gives `nova-cafe`). When the name gives
+fewer than 3 characters, the handle is `shop-` and four digits, the same digits
+for the same name. The owner can always change it before the business is made.
+
+**Reserved** (`kernel/index/businesses/reserved.ts`), answered as `reserved`:
+
+- our own words: the app's pages and paths (`login`, `setup`, `api`, ...)
+- paths we will need later: `menu`, `order`, `pay`, `checkout`, `invite`,
+  `join`, `faq`, `legal`, `verify`, `official`, `telegram`, `whatsapp`, ...
+- known chains and brands in Egypt (`starbucks`, `costa`, `cilantro`,
+  `seoudi`, `carrefour`, `talabat`, `fawry`, ...): only names that are a brand
+  first, so a café can still be called "Panda" or "Metro"
+- our own brand name, once the team picks it
+
+**Report and reclaim** (a draft; SEC or BE will own it, ALL-002 open question):
+
+1. Someone who thinks a handle uses their name writes to us with the handle and
+   proof: a trademark, a commercial register entry, or the brand's official
+   page
+2. We look within 7 days. The business keeps working meanwhile
+3. If the claim holds, we tell the owner first and give them 7 days to pick a
+   new handle; then the old one moves to the brand, or is reserved
+4. We write down every claim and what was decided, and add the brand to the
+   reserved list
