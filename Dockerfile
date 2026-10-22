@@ -17,6 +17,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
+COPY fake ./fake
 USER node
 EXPOSE 11001
 CMD ["node", "dist/gateway/server.js"]

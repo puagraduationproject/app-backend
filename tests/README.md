@@ -2,6 +2,7 @@
 
 Tests across modules. Each module also has its own tests next to its code.
 
+- `road`: the Shell and the Kernel as two running services: the seal, key changes, copied and late requests, busy and crashed cores, a Kernel restart
 - [`isolation`](isolation/README.md): Business A tries to read business B: must fail, for every module
 - [`schema-users`](schema-users/README.md): Each module's database user sees only its own schema
 - [`roles`](roles/README.md): Each role against each system call

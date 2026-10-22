@@ -25,5 +25,12 @@ into words in the user's language.
 | `bad_origin` | A write request came from another site (auth) |
 | `handle_taken` | Another business has this handle (setup) |
 | `business_limit` | The account already has 5 businesses; waiting does not help (setup) |
+| `bad_seal` | A message between the Shell and the Kernel was not sealed, was changed, or used the wrong key ([protocol](../protocol/README.md)) |
+| `unknown_key` | The Kernel does not know this key, or no longer accepts it; the Shell gets a new one (protocol) |
+| `stale_request` | The request was sent more than 30 seconds ago, or ahead (protocol) |
+| `replayed_request` | The same request was sent before (protocol) |
+| `kernel_busy` | Every core of the Kernel is full; try again shortly (protocol) |
+| `core_stopped` | The core running the call stopped; safe to send again with the same retry key (protocol) |
+| `timeout` | The Kernel did not answer after every try (protocol) |
 
 More codes are added here before any system call uses them.

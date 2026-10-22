@@ -2,17 +2,22 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 2.9. When the design changes, this page changes with it.
 
-The only door into the Kernel. For every command (system call) that comes in,
-from any door or from [Login](../login/README.md):
+The only door into the Kernel, and a service of its own (port 11002, inside
+the network only). For every command (system call) that comes in, from any
+door or from [Login](../login/README.md):
 
-1. Checks the credential: the session cookie, the AI's token and who it acts
-   for, an API key, or the secret an outside service sends with its webhook
-2. Reads the command and checks its inputs have the right shape
-3. Signs a **Pass** for that one call: account, business, actor, expiry
-4. Hands it to the Kernel, and the answer back to the caller
+1. Reads the command and checks its inputs against the call's JSON file
+2. Seals it into a **Pass**: the business, the person's session token, the
+   call and its input, sealed with the current key
+   ([protocol](../../contracts/protocol/README.md))
+3. Hands it to the Kernel, sends it again when a sure call gets no answer,
+   and gives the answer back to the caller
 
-It answers "who is sending this command, and for which business?" on every
-call. It never reads or writes data: checking a session is itself a call to
-the Kernel (`system.check_session`).
+The Kernel checks the session token itself; the Shell never reads or writes
+data. The Shell asks the Kernel for a new key every 5 minutes.
 
-Not built yet; today the routes check the session themselves.
+- `server.ts`: the service: `POST /call` (from the doors), `GET /health`
+- `link.ts`: the Shell's side of the protocol: the keys, sealing, sending again
+
+The doors do not call the Shell yet (the next road); today the routes still
+check the session themselves. Tests: `tests/road/`.

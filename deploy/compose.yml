@@ -1,4 +1,4 @@
-# The test setup: router, staff app, backend, migrations and database.
+# The test setup: router, staff app, backend, Shell, Kernel, migrations and database.
 # Images are built from app-web and app-backend and tagged with RELEASE.
 # Real settings come from .env next to this file, never from the repo.
 name: graduationproject
@@ -32,6 +32,26 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+
+  # The Shell and the Kernel: their own services, inside the network only.
+  shell:
+    image: graduationproject-backend:${RELEASE:?set RELEASE}
+    restart: unless-stopped
+    command: ["node", "dist/gateway/shell/server.js"]
+    environment:
+      SHELL_PORT: "11002"
+      KERNEL_URL: http://kernel:11003
+      KERNEL_START_KEY: ${KERNEL_START_KEY:?set in .env}
+    depends_on: [kernel]
+
+  kernel:
+    image: graduationproject-backend:${RELEASE:?set RELEASE}
+    restart: unless-stopped
+    command: ["node", "dist/os/kernel/server.js"]
+    environment:
+      KERNEL_PORT: "11003"
+      KERNEL_CORES: "2"
+      KERNEL_START_KEY: ${KERNEL_START_KEY:?set in .env}
 
   migrate:
     image: ghcr.io/amacneil/dbmate:2

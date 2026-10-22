@@ -1,8 +1,4 @@
-function required(name: string): string {
-  const value = process.env[name]?.trim();
-  if (!value) throw new Error(`Missing setting ${name}`);
-  return value;
-}
+import { required } from './env.js';
 
 const mailMode = process.env.MAIL_MODE === 'log' ? 'log' : 'gmail';
 

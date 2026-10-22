@@ -1,0 +1,19 @@
+{
+  "name": "test.busy",
+  "version": 1,
+  "module": "test",
+  "description": "Keeps its core fully busy for some seconds. Proves the other cores keep answering.",
+  "connection": { "delivery": "sure", "time_limit_ms": 15000, "tries": 1 },
+  "input": {
+    "type": "object",
+    "properties": { "seconds": { "type": "number", "minimum": 0, "maximum": 10 } },
+    "required": ["seconds"],
+    "additionalProperties": false
+  },
+  "output": {
+    "type": "object",
+    "properties": { "core": { "type": "integer" }, "seconds": { "type": "number" } }
+  },
+  "errors": ["invalid_input", "not_logged_in", "not_allowed"],
+  "rules": {}
+}

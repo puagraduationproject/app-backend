@@ -4,9 +4,12 @@ dist
 contracts
 rules
 templates
-fake
+fake/*
+!fake/syscalls
+!fake/sessions.json
 tests
 deploy
 **/*.md
 har
 *.har
+dist-tests

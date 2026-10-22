@@ -11,4 +11,8 @@ The JSON file is what the AI reads to know which commands it can use, and the
 contract every other part builds on. Each call's file is written when that
 call is built, one by one.
 
+`index.ts` loads the JSON files; today only the fake test calls in
+`fake/syscalls/`. The Shell uses them to check inputs and how to deliver a
+call, the Kernel to find the call.
+
 Has its own tests.

@@ -13,7 +13,8 @@ transaction the Kernel hands them, and never open the database themselves.
 
 ## The Kernel
 
-- [`kernel`](kernel/README.md): processes each system call; the only database connection
+- [`kernel`](kernel/README.md): processes each system call; the only database connection; a service with cores
+  - `cores`: the manager and its cores; calls in parallel; the keys
   - [`call`](kernel/call/README.md): takes a system call with its Pass and runs it in one transaction
   - [`checks`](kernel/checks/README.md): the five checks
   - [`tenancy`](kernel/tenancy/README.md): every call inside one business; sets the row-level security context
@@ -38,3 +39,4 @@ transaction the Kernel hands them, and never open the database themselves.
   - [`numbering`](shared/numbering/README.md): per-business numbers people read: order #1042, purchase #33
   - [`money`](shared/money/README.md): whole piastres plus currency; never floats
   - [`errors`](shared/errors/README.md): error codes from contracts/errors, never message text
+  - `seal`, `protocol`: the [Shell and Kernel protocol](../contracts/protocol/README.md): AES-256-GCM sealing, the call and answer shapes

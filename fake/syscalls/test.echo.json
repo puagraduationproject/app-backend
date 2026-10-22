@@ -1,0 +1,23 @@
+{
+  "name": "test.echo",
+  "version": 1,
+  "module": "test",
+  "description": "Gives back its input and which core answered. Proves the road from the Shell to the Kernel and back.",
+  "connection": { "delivery": "sure", "time_limit_ms": 5000, "tries": 3 },
+  "input": {
+    "type": "object",
+    "properties": { "text": { "type": "string", "maxLength": 200 } },
+    "required": ["text"],
+    "additionalProperties": false
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "text": { "type": "string" },
+      "core": { "type": "integer" },
+      "account_id": { "type": "string" }
+    }
+  },
+  "errors": ["invalid_input", "not_logged_in", "not_allowed"],
+  "rules": {}
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "session": "fake-session-owner-nova",
+    "account_id": "fake-account-1",
+    "businesses": ["fake-business-nova"]
+  },
+  {
+    "session": "fake-session-cashier-basma",
+    "account_id": "fake-account-2",
+    "businesses": ["fake-business-basma"]
+  }
+]

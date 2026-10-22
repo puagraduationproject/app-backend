@@ -7,7 +7,8 @@ Written once here, used by the backend, `app-web`, `app-ai-agent` and
 
 | Folder | Holds |
 |--------|-------|
-| [syscalls/](syscalls/README.md) | One reference page per system call |
+| [syscalls/](syscalls/README.md) | One reference page and one JSON file per system call |
+| [protocol/](protocol/README.md) | How the Shell and the Kernel connect, the seal, the format |
 | [packs/](packs/README.md) | The essentials and every pack |
 | [events/](events/README.md) | The envelope and one page per event |
 | [cards/](cards/README.md) | The cards the windows and the AI show |

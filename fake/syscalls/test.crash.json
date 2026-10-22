@@ -1,0 +1,14 @@
+{
+  "name": "test.crash",
+  "version": 1,
+  "module": "test",
+  "description": "Stops its own core. Proves the other cores keep going and the manager starts it again.",
+  "connection": { "delivery": "fire_and_forget", "time_limit_ms": 2000, "tries": 1 },
+  "input": { "type": "object", "properties": {}, "additionalProperties": false },
+  "output": {
+    "type": "object",
+    "properties": { "accepted": { "type": "boolean" } }
+  },
+  "errors": ["not_logged_in", "not_allowed"],
+  "rules": {}
+}

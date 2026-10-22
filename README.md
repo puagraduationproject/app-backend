@@ -56,6 +56,7 @@ app-backend/
 │   ├── cards/                  one page per card (10)
 │   ├── values/                 IDs, money, order statuses, roles, channels, payment methods,
 │   │                           AI permission settings
+│   ├── protocol/               how the Shell and the Kernel connect, the seal, the format
 │   ├── errors/                 error codes
 │   ├── limits/                 shared limits
 │   ├── training/               the training example format (owned by the AI team)

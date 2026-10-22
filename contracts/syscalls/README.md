@@ -9,8 +9,11 @@ checks the backend against it.
 Next to each page sits its **JSON file** (`<module>/<name>.json`): the same
 contract in a form programs read. The [Registry](../../os/registry/README.md)
 loads it, and the AI reads it to know which commands it can use. It holds the
-call's name, module, pack, inputs and output (JSON Schema), error codes, and
-its own rules (roles, face, AI default, approval, retry key, undo, limits).
+call's name, module, pack, inputs and output (JSON Schema), error codes, how
+it connects (`connection`: sure or fire and forget, its time limit and tries;
+see the [protocol](../protocol/README.md)), and its own rules (roles, face,
+AI default, approval, retry key, undo, limits). The first files are the fake
+test calls in [`fake/syscalls/`](../../fake/README.md).
 Each call's JSON file is written when that call is built; the page and the
 JSON file never differ.
 
