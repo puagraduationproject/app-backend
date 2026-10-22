@@ -17,7 +17,7 @@ export async function sendNotice(to: string, subject: string, text: string): Pro
     sentInLogMode.push({ to, subject });
     return;
   }
-  await transport.sendMail({ from: `PUA Graduation Project <${config.mail.gmailUser}>`, to, subject, text });
+  await transport.sendMail({ from: `EdaraPilot <${config.mail.gmailUser}>`, to, subject, text });
 }
 
 export async function sendCode(to: string, code: string): Promise<void> {
@@ -27,7 +27,7 @@ export async function sendCode(to: string, code: string): Promise<void> {
   }
   try {
     await transport.sendMail({
-      from: `PUA Graduation Project <${config.mail.gmailUser}>`,
+      from: `EdaraPilot <${config.mail.gmailUser}>`,
       to,
       subject: `Your code: ${code}`,
       text: `Your code is ${code}\n\nIt works for 10 minutes. If you did not ask for it, you can ignore this email.`,
