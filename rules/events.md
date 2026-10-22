@@ -3,7 +3,7 @@
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) sections 2.9, 7.4 and 2.6. When the design changes, this page changes with it.
 
 1. The Kernel writes the change and an outbox row in one transaction
-   ([kernel/outbox](../kernel/outbox/README.md))
+   ([os/outbox](../os/outbox/README.md))
 2. The [Daemons](../daemons/README.md) read undispatched rows and deliver them
    to listeners, including the AI
 3. Delivered rows are marked; failures retry

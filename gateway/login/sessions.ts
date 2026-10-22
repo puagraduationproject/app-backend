@@ -1,9 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { Selectable } from 'kysely';
-import { db } from '../../database/client.js';
+import { db } from '../../os/kernel/database.js';
 import type { AccountTable, SessionEndReason, SessionTable } from '../../database/types.js';
-import { AppError } from '../../kernel/errors/index.js';
-import { sendNotice } from '../../kernel/drivers/mail/index.js';
+import { AppError } from '../../os/shared/errors/index.js';
+import { sendNotice } from '../../os/drivers/mail/index.js';
 import { keyedHash, newTicket } from './secrets.js';
 
 export const SESSION_COOKIE = '__Host-gp_session';

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Actor } from '../audit/index.js';
-import type { Trx } from '../tenancy/index.js';
+import type { Trx } from '../kernel/tenancy/index.js';
 
 export async function emit(trx: Trx, event: {
   businessId: string;

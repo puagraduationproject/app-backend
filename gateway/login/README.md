@@ -4,13 +4,13 @@ The log-in engine: sign up, log in, email codes, passwords, Google, sessions
 and devices, lock-out (design 7.6). It answers "who is this person?" once, at
 log-in, and gives the browser its session. It keeps nothing itself: to save
 an account, check a password, start a session or send a code, it asks the
-Kernel through the internal [`system.*` calls](../../kernel/system/README.md),
+Kernel through the internal [`system.*` calls](../../os/system/README.md),
 through the [Shell](../shell/README.md) like every other command (design 2.9).
 The users section (accounts, sessions, sign-in codes) is in the `core` schema
 today.
 
 > **Today's code** still saves accounts and sends mail itself; it moves behind
-> the internal `system.*` calls when [`kernel/call`](../../kernel/call/README.md) is built.
+> the internal `system.*` calls when [`os/kernel/call`](../../os/kernel/call/README.md) is built.
 
 Has its own tests.
 

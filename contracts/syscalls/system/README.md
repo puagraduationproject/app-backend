@@ -6,5 +6,5 @@ Used only by Login in the Gateway, with the actor "gateway" and no business.
 Never offered to the app, the AI or outside callers, so they are not counted
 in the system call list and never appear in `ai.find_syscalls`.
 
-The list is in [kernel/system](../../../kernel/system/README.md). One page per
+The list is in [os/system](../../../os/system/README.md). One page per
 call will be written here before it is built.

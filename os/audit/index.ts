@@ -1,4 +1,4 @@
-import type { Trx } from '../tenancy/index.js';
+import type { Trx } from '../kernel/tenancy/index.js';
 
 export type Actor = { type: 'user' | 'ai' | 'system'; id: string | null };
 

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { config } from '../../../config/index.js';
-import { AppError } from '../../errors/index.js';
+import { AppError } from '../../shared/errors/index.js';
 
 const transport =
   config.mail.mode === 'gmail'

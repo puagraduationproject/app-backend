@@ -1,4 +1,4 @@
-import { db } from '../../database/client.js';
+import { db } from '../../os/kernel/database.js';
 import type { SetupStep } from '../../database/types.js';
 
 // The first time an account reaches each setup step; later visits change nothing.

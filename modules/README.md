@@ -1,7 +1,7 @@
 # Modules
 
 One folder per module. Each owns its data and publishes its system calls.
-A module never opens the database itself: the [Kernel](../kernel/README.md)
+A module never opens the database itself: the [Kernel](../os/README.md)
 runs its code (design 2.9). Each module brings its own data section, its
 system calls, its rules, its kinds of things for the OGR, its listeners and
 jobs, its pack, and its drivers if it talks to an outside service.

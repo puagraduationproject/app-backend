@@ -9,10 +9,12 @@ with the same checks and the same audit.
 - The **Gateway** takes every request: the doors, **Login** (sign up, log in,
   sessions) and the **Shell**, the only door into the Kernel, which checks
   each command and signs a **Pass**
-- The **Kernel** runs five checks and then the system call. It is the only
-  part that reads and writes data, and the only one that uses drivers, even
-  for log-in and the system's own email. It asks the **Index** (whose is
-  it?), the **OGR** (what is it linked to?) and the **Registry** (which call?)
+- The **OS** (`os/`) holds the Kernel and the parts around it. The **Kernel**
+  works like a CPU: it only processes calls, running five checks and then the
+  system call. It holds the only database connection, and is the only one
+  that uses drivers, even for log-in and the system's own email. It asks the
+  **Directory** (whose is it?), the **OGR** (what is it linked to?) and the
+  **Registry** (which call?); they work inside the Kernel's transaction
 - The **Daemons** always run: events, jobs, retries
 - The **modules** bring their data, system calls and rules; their **drivers**
   talk to outside services (Telegram, Meta, payments)
@@ -44,7 +46,8 @@ app-backend/
 ├── rules/                      one page each: parts, architecture, modules, system calls,
 │                               events, contracts
 ├── contracts/                  the backend's promise to everyone else (design 4.4)
-│   ├── syscalls/               one reference page per system call, one folder per module (164)
+│   ├── syscalls/               per system call: its reference page and its JSON file (what the
+│   │                           Registry and the AI read), one folder per module (164)
 │   │   ├── core/ (12)  erp/ (54)  crm/ (31)  channels/ (12)  store/ (10)
 │   │   ├── studio/ (10)  marketing/ (6)  team/ (10)  reports/ (5)  ai/ (12)
 │   │   └── ogr/ (2)
@@ -70,11 +73,12 @@ app-backend/
 │   ├── shell/                  the only door into the Kernel: checks each command, signs the Pass
 │   ├── streaming/  realtime/
 │   └── server.ts               starts the program and puts the doors together
-├── kernel/                     mode 0: the only part that reads and writes data and uses drivers
-│                               call, checks, tenancy, context, index, ogr, syscall-registry,
-│                               approvals, system (internal calls for Login), drivers (mail,
-│                               files), audit, outbox, idempotency, undo, dry-run,
-│                               numbering, money, errors
+├── os/                         mode 0: the Kernel and the parts around it
+│   ├── kernel/                 the CPU: processes each call (call, checks, tenancy, context);
+│   │                           the only database connection
+│   └── ...                     directory, ogr, registry, system (internal calls for Login),
+│                               drivers (mail, files), audit, outbox, approvals, idempotency,
+│                               undo, dry-run, shared (numbering, money, errors)
 ├── daemons/                    always running: events, jobs, retries
 ├── modules/                    one folder per module; each area has system calls, service,
 │   │                           data, listeners, tests
@@ -94,7 +98,7 @@ app-backend/
 │                               the compose file; real settings are never in the repo
 ├── fake/                       answers every system call from its page's examples and the seeds
 └── tests/                      isolation, schema-users, roles, syscalls, pages, packs, undo,
-                                order-flow, processes, rebuild; login and index tests
+                                order-flow, processes, rebuild; login and directory tests
 ```
 
 ## How work happens here

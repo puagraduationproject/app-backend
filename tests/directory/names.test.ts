@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { HANDLE_PATTERN, handleFrom, suggestHandle, transliterate, usernameFrom } from '../../kernel/index/businesses/names.js';
-import { RESERVED } from '../../kernel/index/businesses/reserved.js';
+import { HANDLE_PATTERN, handleFrom, suggestHandle, transliterate, usernameFrom } from '../../os/directory/businesses/names.js';
+import { RESERVED } from '../../os/directory/businesses/reserved.js';
 
 describe('handles from business names', () => {
   it('writes Arabic names in Latin letters', () => {

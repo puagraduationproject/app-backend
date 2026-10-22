@@ -8,5 +8,5 @@
     "rootDir": ".",
     "skipLibCheck": true
   },
-  "include": ["gateway/**/*.ts", "kernel/**/*.ts", "daemons/**/*.ts", "config/**/*.ts", "database/**/*.ts", "modules/**/*.ts"]
+  "include": ["gateway/**/*.ts", "os/**/*.ts", "daemons/**/*.ts", "config/**/*.ts", "database/**/*.ts", "modules/**/*.ts"]
 }

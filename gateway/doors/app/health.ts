@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { sql } from 'kysely';
-import { db } from '../../../database/client.js';
+import { db } from '../../../os/kernel/database.js';
 
 export async function healthRoutes(app: FastifyInstance) {
   app.get('/api/health', async (_request, reply) => {

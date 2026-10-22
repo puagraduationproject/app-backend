@@ -1,7 +1,7 @@
 import { CompiledQuery, Kysely, PostgresDialect } from 'kysely';
 import pg from 'pg';
-import { config } from '../config/index.js';
-import type { Database } from './types.js';
+import { config } from '../../config/index.js';
+import type { Database } from '../../database/types.js';
 
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({

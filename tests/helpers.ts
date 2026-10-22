@@ -10,8 +10,8 @@ process.env.PUBLIC_URL ??= 'http://localhost';
 process.env.AUTH_SECRET ??= 'test-secret';
 
 const { buildServer } = await import('../gateway/server.js');
-export const { db } = await import('../database/client.js');
-export const { sentInLogMode } = await import('../kernel/drivers/mail/index.js');
+export const { db } = await import('../os/kernel/database.js');
+export const { sentInLogMode } = await import('../os/drivers/mail/index.js');
 export const SESSION_COOKIE = '__Host-gp_session';
 
 export const CHROME_WINDOWS =

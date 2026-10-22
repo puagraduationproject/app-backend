@@ -5,6 +5,7 @@ Written and announced to all subteams **before** the change is merged.
 
 | Date | What changed | Why | Breaking? | Old version kept until |
 |------|--------------|-----|:---------:|------------------------|
+| 2026-10-22 | Every system call gets a JSON file next to its page (`contracts/syscalls/<module>/<name>.json`), written when the call is built; the Registry and the AI read it | Programs (the Registry, the AI) need the contract in a form they can read | no: no JSON file exists yet, and the pages stay | |
 | 2026-10-21 | New: `ogr.get_thing`, `ogr.list_links`, `ai.ask_question` and the `question` card | The AI needs the OGR's links through system calls, and a way to ask with choices | no: new pages | |
 | 2026-10-21 | Setup: `city` and `area` make the business's first location (`core.location`), `cities` in `GET /api/app/setup`; `team_size` is optional and null when not given; `location` in `BusinessCreated`; `POST /api/app/setup/steps` and the view `core.setup_funnel`; `POST /api/auth/language` | "Where is it?" replaces "Who works in it?"; see where people stop; setup starts with the language (ALL-002 4.1, 5.2, 5.3, 5.6) | no for callers; `team_size` in the event can now be null, and nothing listens to it yet | |
 | 2026-10-21 | `GET /api/app/names`: the handle suggested from the business name (Arabic in Latin letters) and the person's username; more reserved handles: future paths and brands | An Arabic name gave an empty handle box; anyone could register a chain's name (ALL-002 2.2, 2.4) | no | |

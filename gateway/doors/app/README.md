@@ -65,14 +65,14 @@ there is no business yet.
 ## Handles
 
 **From the name.** `GET /api/app/names` makes the handle from the business
-name, in one place (`kernel/index/businesses/names.ts`) so the app, the AI and
+name, in one place (`os/directory/businesses/names.ts`) so the app, the AI and
 imports all get the same answer. Arabic is written in Latin letters the way
 Egyptians write names in chats (`كافيه النيل` gives `kafeh-elnil`); Latin
 letters lose their accents (`Nova Café` gives `nova-cafe`). When the name gives
 fewer than 3 characters, the handle is `shop-` and four digits, the same digits
 for the same name. The owner can always change it before the business is made.
 
-**Reserved** (`kernel/index/businesses/reserved.ts`), answered as `reserved`:
+**Reserved** (`os/directory/businesses/reserved.ts`), answered as `reserved`:
 
 - our own words: the app's pages and paths (`login`, `setup`, `api`, ...)
 - paths we will need later: `menu`, `order`, `pay`, `checkout`, `invite`,

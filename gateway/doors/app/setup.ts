@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { businessTypes, checkHandle, createBusiness, listMine, suggestNames, type NewBusiness } from '../../../kernel/index/businesses/service.js';
-import { CITIES } from '../../../kernel/index/businesses/places.js';
+import { businessTypes, checkHandle, createBusiness, listMine, suggestNames, type NewBusiness } from '../../../os/directory/businesses/service.js';
+import { CITIES } from '../../../os/directory/businesses/places.js';
 import { BUSINESS_TYPES, SETUP_STEPS, type SetupStep } from '../../../database/types.js';
 import { recordSetupStep } from '../../login/funnel.js';
 import { requireSession } from '../../login/sessions.js';

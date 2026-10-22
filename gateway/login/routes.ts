@@ -1,11 +1,11 @@
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import type { Selectable } from 'kysely';
 import { sql } from 'kysely';
-import { db } from '../../database/client.js';
+import { db } from '../../os/kernel/database.js';
 import type { AccountTable } from '../../database/types.js';
-import { AppError } from '../../kernel/errors/index.js';
+import { AppError } from '../../os/shared/errors/index.js';
 import { googleFinish, googleReady, googleStart } from './google.js';
-import { sendCode } from '../../kernel/drivers/mail/index.js';
+import { sendCode } from '../../os/drivers/mail/index.js';
 import { checkPassword, hashPassword, keyedHash, newCode, newTicket, sameHash } from './secrets.js';
 import { endOneSession, endOtherSessions, listSessions, requireSession, signIn, signOut } from './sessions.js';
 

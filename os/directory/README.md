@@ -1,4 +1,4 @@
-# Kernel: Index
+# OS: Directory
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) sections 2.9 and 7.1. When the design changes, this page changes with it.
 

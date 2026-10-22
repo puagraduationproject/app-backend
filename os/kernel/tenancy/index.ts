@@ -1,6 +1,6 @@
 import { sql, type Transaction } from 'kysely';
-import { db } from '../../database/client.js';
-import type { Database } from '../../database/types.js';
+import { db } from '../database.js';
+import type { Database } from '../../../database/types.js';
 
 export type Trx = Transaction<Database>;
 export type Context = { accountId: string; businessId?: string };

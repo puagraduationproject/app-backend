@@ -12,13 +12,14 @@ A system call is one small action, like `cat` on a computer.
 | User mode | Gateway (mode 1): the doors, Login and the Shell | [`gateway/`](../gateway/README.md) |
 | The log-in program | Login: sign up, log in, sessions; asks the Kernel through `system.*` calls | [`gateway/login/`](../gateway/login/README.md) |
 | Shell: runs each command with your identity | Shell: the only door into the Kernel; checks each command and signs a Pass | [`gateway/shell/`](../gateway/shell/README.md) |
-| Kernel mode | Kernel (mode 0): five checks, then runs; the only part that reads and writes data and uses drivers | [`kernel/`](../kernel/README.md) |
-| Users, groups, home folders | Index: whose is it, what may this person do | [`kernel/index/`](../kernel/index/README.md) |
-| Links between files | OGR: what is this, and what is it linked to | [`kernel/ogr/`](../kernel/ogr/README.md) |
-| System call table | Registry: every system call, from its page | [`kernel/syscall-registry/`](../kernel/syscall-registry/README.md) |
+| Kernel mode | The OS (mode 0): the Kernel and the parts around it | [`os/`](../os/README.md) |
+| The CPU: processes each instruction, the only one that reaches memory | Kernel: five checks, then runs; the only database connection, the only one that uses drivers | [`os/kernel/`](../os/kernel/README.md) |
+| Users, groups, home folders | Directory: whose is it, what may this person do | [`os/directory/`](../os/directory/README.md) |
+| Links between files | OGR: what is this, and what is it linked to | [`os/ogr/`](../os/ogr/README.md) |
+| System call table | Registry: every system call, from its JSON file next to its page | [`os/registry/`](../os/registry/README.md) |
 | Daemons, cron | Daemons: events, jobs, retries; they call the Kernel as "system" | [`daemons/`](../daemons/README.md) |
 | Programs | Modules: ERP, CRM, Channels, Store, Reports, the AI module | [`modules/`](../modules/README.md) |
-| Drivers | System drivers (mail, files) and module drivers (Telegram, Meta, payments) | [`kernel/drivers/`](../kernel/drivers/README.md), `modules/*/drivers/` |
+| Drivers | System drivers (mail, files) and module drivers (Telegram, Meta, payments) | [`os/drivers/`](../os/drivers/README.md), `modules/*/drivers/` |
 
 ## How one call runs
 
@@ -27,7 +28,7 @@ A system call is one small action, like `cat` on a computer.
 2. The Shell checks who is calling and signs a Pass: account, business,
    actor, expiry. No Pass, no call. Log-in is the same: Login sends its
    `system.*` calls through the Shell, with the actor "gateway"
-3. The Kernel finds the system call in the Registry, asks the Index and the
+3. The Kernel finds the system call in the Registry, asks the Directory and the
    OGR, and runs five checks: may he, same business, data rules, already done,
    within limits. It can block a call even when it was approved
 4. In one transaction it runs the module's code and writes the change, the

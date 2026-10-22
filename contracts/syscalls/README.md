@@ -6,6 +6,14 @@ One page per system call, one folder per module. The page is the contract: the b
 builds to it, the frontend and the AI team build on it, and an automatic test
 checks the backend against it.
 
+Next to each page sits its **JSON file** (`<module>/<name>.json`): the same
+contract in a form programs read. The [Registry](../../os/registry/README.md)
+loads it, and the AI reads it to know which commands it can use. It holds the
+call's name, module, pack, inputs and output (JSON Schema), error codes, and
+its own rules (roles, face, AI default, approval, retry key, undo, limits).
+Each call's JSON file is written when that call is built; the page and the
+JSON file never differ.
+
 ## Every page has
 
 | Part | What it says |

@@ -4,7 +4,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY tsconfig.json ./
 COPY gateway ./gateway
-COPY kernel ./kernel
+COPY os ./os
 COPY daemons ./daemons
 COPY config ./config
 COPY database ./database

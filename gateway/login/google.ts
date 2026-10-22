@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { config } from '../../config/index.js';
-import { AppError } from '../../kernel/errors/index.js';
+import { AppError } from '../../os/shared/errors/index.js';
 
 const issuers = new Set(['https://accounts.google.com', 'accounts.google.com']);
 

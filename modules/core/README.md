@@ -6,8 +6,8 @@ The business's profile, notifications, and the `core.*` system calls.
 
 Section 7's Core is split by role (design 2.9): sign-up and log-in are the
 [Login](../../gateway/login/README.md); businesses, members, roles, locations
-and packs are the [Index](../../kernel/index/README.md); audit and outbox
-are the [Kernel](../../kernel/README.md). Their tables all stay in the `core`
+and packs are the [Directory](../../os/directory/README.md); audit and outbox
+are the [Kernel](../../os/README.md). Their tables all stay in the `core`
 schema for now.
 
 Its system calls are its only public face. It never writes another module's tables;
