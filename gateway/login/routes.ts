@@ -5,7 +5,7 @@ import { db } from '../../database/client.js';
 import type { AccountTable } from '../../database/types.js';
 import { AppError } from '../../kernel/errors/index.js';
 import { googleFinish, googleReady, googleStart } from './google.js';
-import { sendCode } from './mail.js';
+import { sendCode } from '../../kernel/drivers/mail/index.js';
 import { checkPassword, hashPassword, keyedHash, newCode, newTicket, sameHash } from './secrets.js';
 import { endOneSession, endOtherSessions, listSessions, requireSession, signIn, signOut } from './sessions.js';
 

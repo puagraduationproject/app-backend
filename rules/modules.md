@@ -6,7 +6,7 @@
 
 | Data | Owner |
 |------|-------|
-| Accounts, sessions, sign-in codes | Shell (2.9) |
+| Accounts, sessions, sign-in codes | Login (2.9), stored through the Kernel |
 | Businesses, members, roles, locations, templates, packs on per business, AI permission settings | Index (2.9) |
 | Things and the links between them | OGR (2.9) |
 | Audit log, outbox, approvals, jobs | Kernel and Daemons (2.9) |
@@ -25,7 +25,7 @@
 
 | Schema | Module |
 |--------|--------|
-| `core` | Core, and for now the Shell, the Index, the audit log and the outbox |
+| `core` | Core, and for now Login's accounts and sessions, the Index, the audit log and the outbox |
 | `ogr` | OGR |
 | `erp` | ERP |
 | `crm` | CRM |

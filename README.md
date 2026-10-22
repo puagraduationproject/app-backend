@@ -6,10 +6,12 @@ database. Its only door is its **system calls**: the staff app (`app-web`), the
 AI (`app-ai-agent`) and later outside websites all use the same system calls,
 with the same checks and the same audit.
 
-- The **Gateway** takes every request: the doors and the **Shell**, which
-  checks who is calling and signs a **Pass**
+- The **Gateway** takes every request: the doors, **Login** (sign up, log in,
+  sessions) and the **Shell**, the only door into the Kernel, which checks
+  each command and signs a **Pass**
 - The **Kernel** runs five checks and then the system call. It is the only
-  part that reads and writes business data. It asks the **Index** (whose is
+  part that reads and writes data, and the only one that uses drivers, even
+  for log-in and the system's own email. It asks the **Index** (whose is
   it?), the **OGR** (what is it linked to?) and the **Registry** (which call?)
 - The **Daemons** always run: events, jobs, retries
 - The **modules** bring their data, system calls and rules; their **drivers**
@@ -64,12 +66,14 @@ app-backend/
 │   └── seeds/                  invented demo coffee shop and small market
 ├── gateway/                    mode 1: everything that comes in
 │   ├── doors/                  app, ai, public, outside (term 2)
-│   ├── shell/                  sign up, log in, sessions; owns the users section; signs the Pass
+│   ├── login/                  sign up, log in, codes, sessions; asks the Kernel (system.*)
+│   ├── shell/                  the only door into the Kernel: checks each command, signs the Pass
 │   ├── streaming/  realtime/
 │   └── server.ts               starts the program and puts the doors together
-├── kernel/                     mode 0: the only part that reads and writes business data
+├── kernel/                     mode 0: the only part that reads and writes data and uses drivers
 │                               call, checks, tenancy, context, index, ogr, syscall-registry,
-│                               approvals, audit, outbox, idempotency, undo, dry-run,
+│                               approvals, system (internal calls for Login), drivers (mail,
+│                               files), audit, outbox, idempotency, undo, dry-run,
 │                               numbering, money, errors
 ├── daemons/                    always running: events, jobs, retries
 ├── modules/                    one folder per module; each area has system calls, service,
@@ -90,7 +94,7 @@ app-backend/
 │                               the compose file; real settings are never in the repo
 ├── fake/                       answers every system call from its page's examples and the seeds
 └── tests/                      isolation, schema-users, roles, syscalls, pages, packs, undo,
-                                order-flow, processes, rebuild; shell and index tests
+                                order-flow, processes, rebuild; login and index tests
 ```
 
 ## How work happens here

@@ -3,7 +3,7 @@ import type { Selectable } from 'kysely';
 import { db } from '../../database/client.js';
 import type { AccountTable, SessionEndReason, SessionTable } from '../../database/types.js';
 import { AppError } from '../../kernel/errors/index.js';
-import { sendNotice } from './mail.js';
+import { sendNotice } from '../../kernel/drivers/mail/index.js';
 import { keyedHash, newTicket } from './secrets.js';
 
 export const SESSION_COOKIE = '__Host-gp_session';

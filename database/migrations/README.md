@@ -10,7 +10,7 @@ The five sections of the design (2.9) and where they are today:
 
 | Section | Owner | Schema |
 |---------|-------|--------|
-| users | Shell | `core` (accounts, sessions, sign-in codes); its own schema later |
+| users | Login (through the Kernel) | `core` (accounts, sessions, sign-in codes); its own schema later |
 | where | Index | `core` (businesses, members, roles, locations, packs) |
 | links | OGR | `ogr` |
 | system | Kernel and Daemons | `core` (audit log, outbox); the jobs library's tables |

@@ -2,7 +2,8 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 2.9. When the design changes, this page changes with it.
 
-The only part that reads and writes business data. It takes a system call
+The only part that reads and writes data (business data and accounts alike),
+and the only part that uses drivers. It takes a system call
 with its Pass, runs five checks, then runs the module's code in one
 transaction. Modules, daemons and doors all go through it.
 
@@ -34,6 +35,8 @@ All of it is saved, or none of it.
 - [`ogr`](ogr/README.md): One Global Reference: what is this, and what is it linked to
 - [`syscall-registry`](syscall-registry/README.md): every system call, from its page in the contracts
 - [`approvals`](approvals/README.md): saves and checks approvals itself
+- [`system`](system/README.md): the internal `system.*` calls Login uses before anyone is logged in
+- [`drivers`](drivers/README.md): the system's own drivers: mail, files; push and sms in term 2
 - [`audit`](audit/README.md): an audit row on every write, by people and by the AI
 - [`outbox`](outbox/README.md): the event, saved with the change
 - [`idempotency`](idempotency/README.md): a retried call writes once

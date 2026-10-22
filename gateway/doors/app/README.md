@@ -59,7 +59,7 @@ no longer asked (ALL-002 4.1).
 `POST /api/app/setup/steps` records, per account, the first time each step was
 reached. The numbers are in the view `core.setup_funnel` (step, `position`,
 `accounts`, `median_seconds` from the account's first step), read straight from
-the database for now. The table belongs to the [Shell](../../shell/README.md):
+the database for now. The table belongs to [Login](../../login/README.md):
 there is no business yet.
 
 ## Handles

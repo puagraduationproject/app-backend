@@ -5,7 +5,7 @@
 The business's profile, notifications, and the `core.*` system calls.
 
 Section 7's Core is split by role (design 2.9): sign-up and log-in are the
-[Shell](../../gateway/shell/README.md); businesses, members, roles, locations
+[Login](../../gateway/login/README.md); businesses, members, roles, locations
 and packs are the [Index](../../kernel/index/README.md); audit and outbox
 are the [Kernel](../../kernel/README.md). Their tables all stay in the `core`
 schema for now.
@@ -32,7 +32,7 @@ business          id, name, handle (unique), business_type, sells,
                   team_size(alone|team, empty for new businesses),
                   settings(jsonb), idempotency_key, created_by, created_at
                   UNIQUE (created_by, idempotency_key)
-account           (gateway/shell: account, email_code, auth_ticket, session, setup_step)
+account           (gateway/login: account, email_code, auth_ticket, session, setup_step)
 membership        id, business_id, user_id, username, display_name, role,
                   invited_by, joined_at
                   UNIQUE (business_id, user_id), UNIQUE (business_id, username)

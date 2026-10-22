@@ -3,7 +3,7 @@ import rateLimit from '@fastify/rate-limit';
 import Fastify from 'fastify';
 import { config } from '../config/index.js';
 import { db } from '../database/client.js';
-import { authRoutes } from './shell/routes.js';
+import { authRoutes } from './login/routes.js';
 import { AppError, registerErrorHandler } from '../kernel/errors/index.js';
 import { healthRoutes } from './doors/app/health.js';
 import { setupRoutes } from './doors/app/setup.js';

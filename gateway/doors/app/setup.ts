@@ -2,8 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import { businessTypes, checkHandle, createBusiness, listMine, suggestNames, type NewBusiness } from '../../../kernel/index/businesses/service.js';
 import { CITIES } from '../../../kernel/index/businesses/places.js';
 import { BUSINESS_TYPES, SETUP_STEPS, type SetupStep } from '../../../database/types.js';
-import { recordSetupStep } from '../../shell/funnel.js';
-import { requireSession } from '../../shell/sessions.js';
+import { recordSetupStep } from '../../login/funnel.js';
+import { requireSession } from '../../login/sessions.js';
 
 const handle = { type: 'string', minLength: 1, maxLength: 30 } as const;
 const name = { type: 'string', minLength: 1, maxLength: 80 } as const;
