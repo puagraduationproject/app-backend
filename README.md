@@ -13,8 +13,13 @@ with the same checks and the same audit.
   works like a CPU: it only processes calls, running five checks and then the
   system call. It holds the only database connection, and is the only one
   that uses drivers, even for log-in and the system's own email. It asks the
-  **Directory** (whose is it?), the **OGR** (what is it linked to?) and the
-  **Registry** (which call?); they work inside the Kernel's transaction
+  **Directory** (where does this business live?), **Sessions** (whose token
+  is it?), **Accounts** (who is this person?), the **OGR** (what is it linked
+  to?) and the **Registry** (which call?); they work inside the Kernel's
+  transaction
+- The database is a grid: a schema per part, and every part but the
+  Directory split by business into one slot per business
+  ([migrations](database/migrations/README.md))
 - The **Daemons** always run: events, jobs, retries
 - The **modules** bring their data, system calls and rules; their **drivers**
   talk to outside services (Telegram, Meta, payments)

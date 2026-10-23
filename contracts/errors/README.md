@@ -24,7 +24,10 @@ into words in the user's language.
 | `not_logged_in` | No session, or it ended (auth) |
 | `bad_origin` | A write request came from another site (auth) |
 | `handle_taken` | Another business has this handle (setup) |
-| `business_limit` | The account already has 5 businesses; waiting does not help (setup) |
+| `business_limit` | The account already has 5 businesses; waiting does not help (setup). Goes away with one log-in, one business |
+| `email_in_other_business` | The email or Google account already belongs to another business; one log-in, one business (auth, invites) |
+| `device_not_allowed` | The business's entry rules do not allow this device or network for this role (auth) |
+| `outside_hours` | The business's entry rules do not allow this role at this hour (auth) |
 | `bad_seal` | A message between the Shell and the Kernel was not sealed, was changed, or used the wrong key ([protocol](../protocol/README.md)) |
 | `unknown_key` | The Kernel does not know this key, or no longer accepts it; the Shell gets a new one (protocol) |
 | `stale_request` | The request was sent more than 30 seconds ago, or ahead (protocol) |

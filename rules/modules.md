@@ -6,11 +6,13 @@
 
 | Data | Owner |
 |------|-------|
-| Accounts, sessions, sign-in codes | Login (2.9), stored through the Kernel |
-| Businesses, members, roles, locations, templates, packs on per business, AI permission settings | Directory (2.9) |
+| Where each business lives, its handle, which business each log-in (email, Google) belongs to, sign-ups in progress | Directory (2.9), not split |
+| Accounts in each business: username, role, password, the second step, lock-out, log-in methods, invites | Accounts (2.9), split by business |
+| Sessions and devices | Sessions (2.9), split by business |
+| Each business's profile, what each role may do, locations, packs on, AI permission settings, entry rules | Core, inside each business's slots |
 | Things and the links between them | OGR (2.9) |
 | Audit log, outbox, approvals, jobs | Kernel and Daemons (2.9) |
-| Business profile, notifications | Core |
+| Notifications | Core |
 | Items, recipes, stock, sales, orders, payments, shifts, suppliers, purchases, credit, expenses | ERP |
 | Customers, identities, timeline, loyalty, support cases, bookings, segments, consent | CRM |
 | Channel accounts, conversations, messages, auto-replies | Channels |
@@ -21,24 +23,33 @@
 | Summary numbers | Reports |
 | Skills, plans, memory, threads, knowledge, AI action log | AI module (its own data only; business data only through system calls) |
 
-## One database, one schema per module
+## One database, as a grid
 
-| Schema | Module |
-|--------|--------|
-| `core` | Core, and for now Login's accounts and sessions, the Directory, the audit log and the outbox |
-| `ogr` | OGR |
-| `erp` | ERP |
-| `crm` | CRM |
-| `channels` | Channels |
-| `store` | Store website |
-| `studio` | Studio |
-| `marketing` | Marketing |
-| `team` | Team |
-| `reports` | Reports |
-| `ai` | AI module |
+The columns are the parts, each a schema; the rows are the businesses. Every
+schema except `directory` is split by business ID into one slot per business
+(design 2.3, [migrations](../database/migrations/README.md)).
+
+| Schema | Part | Split by business |
+|--------|------|:-----------------:|
+| `directory` | Directory: the map of businesses and log-ins, sign-ups | no |
+| `accounts` | Accounts | yes |
+| `sessions` | Sessions | yes |
+| `kernel` | The Kernel's own records | yes |
+| `core` | Core: profile, roles, locations, packs on, AI settings, entry rules, audit log, outbox, numbering | yes |
+| `ogr` | OGR | yes |
+| `erp` | ERP | yes |
+| `crm` | CRM | yes |
+| `channels` | Channels | yes |
+| `store` | Store website | yes |
+| `studio` | Studio | yes |
+| `marketing` | Marketing | yes |
+| `team` | Team | yes |
+| `reports` | Reports | yes |
+| `ai` | AI module | yes |
 
 Only the Kernel opens the database (design 2.9). For each system call it
-switches to the owning module's database user, which has rights only on that
+sets the business (its slot and row-level security) and switches to the
+owning module's database user, which has rights only on that
 module's schema, so a module's code can never touch another module's tables.
 The AI module's user cannot see any business schema.
 
@@ -51,7 +62,7 @@ stores only that ID.
 | Thing | Owner | ID | Used by |
 |-------|-------|----|---------|
 | Business | Core | `business_id` | Every module, every table |
-| Member (a person in the business) | Core | `membership_id` | ERP (shifts, sales), Team, Channels (assigned to), audit |
+| Member (a person in the business) | Accounts | `account_id` | ERP (shifts, sales), Team, Channels (assigned to), audit |
 | Location (branch) | Core | `location_id` | ERP, Team, Store |
 | **Customer** | CRM | `customer_id` | ERP (orders, credit), Channels (conversations), Marketing (sends), Store (orders), AI (memory notes) |
 | Item and variant | ERP | `item_id`, `variant_id` | Store (menu), Studio (designs), Marketing (offers), CRM (usual order) |

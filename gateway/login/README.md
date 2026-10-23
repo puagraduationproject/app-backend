@@ -12,6 +12,27 @@ today.
 > **Today's code** still saves accounts and sends mail itself; it moves behind
 > the internal `system.*` calls when [`os/kernel/call`](../../os/kernel/call/README.md) is built.
 
+## Next: one log-in, one business (design 7.6)
+
+The routes below are today's. With the database grid they change:
+
+- An account lives inside its business ([Accounts](../../os/accounts/README.md)).
+  There is no list of businesses after log-in and no business switcher
+- The log-in box takes an email, a Google account, or `username@handle`
+  (`mona@nova`). Each business also has its own log-in page (`/nova/login`)
+- The [Directory](../../os/directory/README.md) first says which business the
+  email, Google ID or handle is in; the password, the second step and the
+  business's entry rules are then checked in that business's slot, and the
+  token (`<business_id>.<secret>`) is made in its
+  [Sessions](../../os/sessions/README.md) slot
+- Sign-up makes the business and its owner together, at the end of the setup
+  (design 7.7). Until then the sign-up waits in `directory.signup`, so there
+  is never an account with no business
+- An email or Google account already in another business is refused with
+  `email_in_other_business`
+- Staff with no email log in with `mona@nova` and a first password from the
+  owner, changed at the first log-in; the owner resets it
+
 Has its own tests.
 
 Also keeps, per account, how far the person got in the business setup

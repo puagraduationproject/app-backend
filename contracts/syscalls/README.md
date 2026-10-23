@@ -47,7 +47,7 @@ what Marketing takes.
 | [`core.turn_on_pack`](./core/turn_on_pack.md) | Turn a pack on, with the packs it needs (undo: turn off) | W | `essentials` | 1 |
 | [`core.turn_off_pack`](./core/turn_off_pack.md) | Turn a pack off; its data is kept (undo: turn on) | W | `essentials` | 1 |
 | [`core.list_members`](./core/list_members.md) | Members and roles | R | `essentials` | 1 |
-| [`core.invite_member`](./core/invite_member.md) | Invite by phone or email with a role | W | `essentials` | 1 |
+| [`core.invite_member`](./core/invite_member.md) | Invite by email with a role, or make a member with no email (a username and a first password) | W | `essentials` | 1 |
 | [`core.change_role`](./core/change_role.md) | Change a member's role | W | `essentials` | 1 |
 | [`core.remove_member`](./core/remove_member.md) | Remove a member | W | `essentials` | 1 |
 | [`core.list_locations`](./core/list_locations.md) | Branches | R | `essentials` | 1 |

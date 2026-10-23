@@ -2,10 +2,21 @@
 
 > From [technical-structure.md](https://github.com/puagraduationproject/graduationproject/blob/main/technical-structure.md) section 7.1. When the design changes, this page changes with it.
 
-Holds Login's users section, the Directory's where section, and the Kernel's
-audit log and outbox, for now (design 2.9). One migration per
-change, never edited after it runs. Every business table has `business_id` and
-row-level security.
+Each business's own settings, in its own slot (design 2.3): its profile,
+what each role may do, locations, packs on, AI settings, entry rules,
+numbering, the audit log, the outbox and notifications. One migration per
+change, never edited after it runs.
+
+**Today** the schema still holds everything below, not split yet: Login's
+accounts, codes and sessions, the businesses, the memberships, the audit log
+and the outbox. With the grid they move: `business` to
+[`directory`](../directory/README.md) (the map) and `core.profile` (the rest),
+`account`, `membership`, `invite` and `email_code` to
+[`accounts`](../accounts/README.md), `session` to
+[`sessions`](../sessions/README.md), `setup_step` to `directory.signup_step`,
+and `auth_ticket` goes away when sign-up waits in `directory.signup`.
+
+Today's tables:
 
 ```
 business          id, name, handle (unique), business_type, sells,

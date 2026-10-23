@@ -4,11 +4,15 @@
 
 The business's profile, notifications, and the `core.*` system calls.
 
-Section 7's Core is split by role (design 2.9): sign-up and log-in are the
-[Login](../../gateway/login/README.md); businesses, members, roles, locations
-and packs are the [Directory](../../os/directory/README.md); audit and outbox
-are the [Kernel](../../os/README.md). Their tables all stay in the `core`
-schema for now.
+Section 7's Core is split by role (design 2.9): sign-up and log-in are
+[Login](../../gateway/login/README.md) with [Accounts](../../os/accounts/README.md)
+and [Sessions](../../os/sessions/README.md); the map of businesses and log-ins
+is the [Directory](../../os/directory/README.md); audit and outbox are the
+[Kernel](../../os/README.md). What stays in Core is each business's own
+settings, in its own slot of the `core` schema (design 2.3): profile, what each
+role may do, locations, packs on, AI settings, entry rules, numbering, audit
+log, outbox, notifications. Today all these tables are still in `core`, not
+split yet ([migrations](../../database/migrations/core/README.md)).
 
 Its system calls are its only public face. It never writes another module's tables;
 it emits events and reads other modules through their services.
@@ -24,7 +28,7 @@ stack once it is chosen:
 | `listeners` | Handlers for events from other modules |
 | `tests` | The area's own tests: every system call, every rule |
 
-## Data (schema `core`)
+## Data (schema `core`, today)
 
 ```
 business          id, name, handle (unique), business_type, sells,
@@ -56,7 +60,7 @@ api_key           id, business_id, name, scopes, created_at   (term 2)
 
 ## Events
 
-- **Emits:** BusinessCreated, MemberInvited, MemberJoined, PackTurnedOff, PackTurnedOn, RoleChanged
+- **Emits:** BusinessCreated, BusinessPaused, HandleChanged, MemberInvited, MemberJoined, MemberRemoved, PackTurnedOff, PackTurnedOn, RoleChanged
 - **Listens to:** none
 
 ## System calls (12)
@@ -69,7 +73,7 @@ api_key           id, business_id, name, scopes, created_at   (term 2)
 | [`core.turn_on_pack`](../../contracts/syscalls/core/turn_on_pack.md) | Turn a pack on, with the packs it needs (undo: turn off) | W | `essentials` | 1 |
 | [`core.turn_off_pack`](../../contracts/syscalls/core/turn_off_pack.md) | Turn a pack off; its data is kept (undo: turn on) | W | `essentials` | 1 |
 | [`core.list_members`](../../contracts/syscalls/core/list_members.md) | Members and roles | R | `essentials` | 1 |
-| [`core.invite_member`](../../contracts/syscalls/core/invite_member.md) | Invite by phone or email with a role | W | `essentials` | 1 |
+| [`core.invite_member`](../../contracts/syscalls/core/invite_member.md) | Invite by email with a role, or make a member with no email (a username and a first password) | W | `essentials` | 1 |
 | [`core.change_role`](../../contracts/syscalls/core/change_role.md) | Change a member's role | W | `essentials` | 1 |
 | [`core.remove_member`](../../contracts/syscalls/core/remove_member.md) | Remove a member | W | `essentials` | 1 |
 | [`core.list_locations`](../../contracts/syscalls/core/list_locations.md) | Branches | R | `essentials` | 1 |

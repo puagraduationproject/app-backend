@@ -18,7 +18,7 @@
 
 ## Purpose
 
-Invite by phone or email with a role.
+Invite by email with a role, or make a member with no email (a username and a first password). An email another business already has is refused with `email_in_other_business`. One log-in, one business (design 7.6).
 
 - **Use it when:** to write
 - **Do not use it when:** to write

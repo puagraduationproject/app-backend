@@ -22,7 +22,10 @@ One backend made of strict modules and one database. Not microservices.
 - Numbers people read are per business (order #1042, purchase #33), not random IDs
 - Idempotency keys on anything that can be retried (orders, webhooks, AI actions)
 - Order lines snapshot name, price and cost at the time of sale
-- Every business-scoped table has `business_id`, locked by row-level security
+- Every business-scoped table has `business_id` and is split by it: each
+  business has its own slot of every table of the parts it uses, locked by
+  row-level security on top ([modules.md](modules.md#one-database-as-a-grid))
+- The business ID never changes; the handle is only a label on it
 - Events go through an outbox, written in the same transaction as the change
 - Outside services (channels, payments, couriers, image model) sit behind drivers
 - A test that tries to read another business's data, and must fail

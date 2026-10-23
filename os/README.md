@@ -17,14 +17,17 @@ transaction the Kernel hands them, and never open the database themselves.
   - `cores`: the manager and its cores; calls in parallel; the keys
   - [`call`](kernel/call/README.md): takes a system call with its Pass and runs it in one transaction
   - [`checks`](kernel/checks/README.md): the five checks
-  - [`tenancy`](kernel/tenancy/README.md): every call inside one business; sets the row-level security context
+  - [`tenancy`](kernel/tenancy/README.md): every call inside one business: its slot and the row-level security context
   - [`context`](kernel/context/README.md): business, actor, correlation ID and retry key on every call and event (design 2.6)
   - `database.ts`: the database connection
 
 ## The parts around it
 
-- [`directory`](directory/README.md): whose is it, what may this person do: businesses, members,
-  roles, locations, templates, packs on, AI settings
+- [`directory`](directory/README.md): the map, not split by business: where each business lives,
+  which business each log-in is in, sign-ups; kept in the Kernel's memory
+- [`accounts`](accounts/README.md): the people of each business, in its own slot: usernames, roles,
+  passwords, log-in methods, invites
+- [`sessions`](sessions/README.md): the tokens and devices of each business, in its own slot
 - [`ogr`](ogr/README.md): One Global Reference: what is this, and what is it linked to
 - [`registry`](registry/README.md): every system call, from its JSON file in the contracts
 - [`system`](system/README.md): the internal `system.*` calls Login uses before anyone is logged in

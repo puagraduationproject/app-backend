@@ -14,7 +14,9 @@ A system call is one small action, like `cat` on a computer.
 | Shell: runs each command with your identity | Shell: the only door into the Kernel; checks each command and signs a Pass | [`gateway/shell/`](../gateway/shell/README.md) |
 | Kernel mode | The OS (mode 0): the Kernel and the parts around it | [`os/`](../os/README.md) |
 | The CPU: processes each instruction, the only one that reaches memory | Kernel: five checks, then runs; the only database connection, the only one that uses drivers | [`os/kernel/`](../os/kernel/README.md) |
-| Users, groups, home folders | Directory: whose is it, what may this person do | [`os/directory/`](../os/directory/README.md) |
+| The disk's partition table | Directory: where each business lives, which business each log-in is in | [`os/directory/`](../os/directory/README.md) |
+| Users and passwords | Accounts: the people of each business, in its own slot | [`os/accounts/`](../os/accounts/README.md) |
+| Logged-in users | Sessions: the tokens and devices of each business, in its own slot | [`os/sessions/`](../os/sessions/README.md) |
 | Links between files | OGR: what is this, and what is it linked to | [`os/ogr/`](../os/ogr/README.md) |
 | System call table | Registry: every system call, from its JSON file next to its page | [`os/registry/`](../os/registry/README.md) |
 | Daemons, cron | Daemons: events, jobs, retries; they call the Kernel as "system" | [`daemons/`](../daemons/README.md) |
@@ -28,8 +30,9 @@ A system call is one small action, like `cat` on a computer.
 2. The Shell checks who is calling and signs a Pass: account, business,
    actor, expiry. No Pass, no call. Log-in is the same: Login sends its
    `system.*` calls through the Shell, with the actor "gateway"
-3. The Kernel finds the system call in the Registry, asks the Directory and the
-   OGR, and runs five checks: may he, same business, data rules, already done,
+3. The Kernel finds the system call in the Registry, asks Sessions whose the
+   token is (in the token's business only), the Directory (in memory) where
+   that business lives, and the OGR, and runs five checks: may he, same business, data rules, already done,
    within limits. It can block a call even when it was approved
 4. In one transaction it runs the module's code and writes the change, the
    audit row, the event (outbox) and the new OGR links
